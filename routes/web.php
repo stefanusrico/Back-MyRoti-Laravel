@@ -27,5 +27,8 @@ Route::get('/registrasi', function() {
 });
 
 // Auth::routes();
+Route::get('/login', [loginController::class, 'index']);
+Route::post('/login', [loginController::class, 'authentication']);
+
 Route::get('/registrasi', [RegisterController::class, 'index']);
 Route::post('/registrasi', [RegisterController::class, 'store']);
