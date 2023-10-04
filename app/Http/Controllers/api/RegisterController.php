@@ -11,7 +11,8 @@ class RegisterController extends Controller
     public function __invoke(Request $request) {
         $validatedData = Validator::make($request->all(), [
             'username' => 'required|unique:users',
-            'password' => 'required|min:8|confirmed|regex:/[A-Z]/|regex:/[0-9]{3}/'
+            'password' => 'required|min:8|confirmed|regex:/[A-Z]/|regex:/[0-9]{3}/',
+            'role' => 'required'
         ]);
 
         if ( $validatedData->fails() ) {
@@ -20,7 +21,8 @@ class RegisterController extends Controller
 
         $user = User::create([
             'username' => $request->username,
-            'password' => bcrypt($request->password)
+            'password' => bcrypt($request->password),
+            'role' => $request->role
         ]);
 
         if ( $user ) {
@@ -29,9 +31,9 @@ class RegisterController extends Controller
                 'user' => $user,
             ], 201);
         } else {
-        return response()->json([
-            'success' => false,
-        ], 409);
-    }
+            return response()->json([
+                'success' => false,
+            ], 409);
+        }
     }
 }
