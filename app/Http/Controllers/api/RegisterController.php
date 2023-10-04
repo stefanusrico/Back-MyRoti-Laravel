@@ -10,6 +10,7 @@ class RegisterController extends Controller
 {
     public function __invoke(Request $request) {
         $validatedData = Validator::make($request->all(), [
+            'name' => 'required',
             'username' => 'required|unique:users',
             'password' => 'required|min:8|confirmed|regex:/[A-Z]/|regex:/[0-9]{3}/',
             'role' => 'required'
@@ -20,6 +21,7 @@ class RegisterController extends Controller
         }
 
         $user = User::create([
+            'name' => $request->name,
             'username' => $request->username,
             'password' => bcrypt($request->password),
             'role' => $request->role
