@@ -38,4 +38,11 @@ class RegisterController extends Controller
             ], 409);
         }
     }
+
+    public function getRole(){
+        $dataRole = User::select('role')->get();
+
+        // Kembalikan data lapak dalam format JSON
+        return response()->json($dataRole, 200);  
+    }
 }

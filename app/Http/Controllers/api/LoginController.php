@@ -28,9 +28,11 @@ class LoginController extends Controller
     if (Auth::attempt($credentials)) {
       // Autentikasi berhasil
       $user = Auth::user();
+      $role = $user->role;
       return response()->json([
         'success' => true,
         'user' => $user,
+        'role' => $role,
       ], 200);
     }
 
