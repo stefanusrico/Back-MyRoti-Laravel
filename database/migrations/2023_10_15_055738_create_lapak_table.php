@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('lapak', function (Blueprint $table) {
             $table->id();
             $table->string('nama_warung')->unique();
+            $table->string('image');
             $table->string('area');
             $table->string('alamat_warung');
             $table->string('contact_warung');
