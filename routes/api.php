@@ -38,3 +38,5 @@ Route::delete('/lapak/{id}', 'App\Http\Controllers\Api\LapakController@deleteLap
 Route::get('/data-kurir', [DataKurir::class, 'getData']);
 Route::get('/data-koordinator', [DataKoordinator::class, 'getData']);
 Route::get('/data-keuangan', [DataKeuangan::class, 'getData']);
+
+Route::delete('/data-kurir/{id}', 'App\Http\Controllers\api\KurirController@deleteKurir');
