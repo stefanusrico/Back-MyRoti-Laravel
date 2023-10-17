@@ -45,4 +45,47 @@ class LapakController extends Controller
     return response()->json($lapak, 200);
     }
 
+    public function updateLapak(Request $request, $id)
+    {
+        $lapak = Lapak::find($id);
+    
+        if (!$lapak) {
+            return response()->json(['message' => 'Data lapak tidak ditemukan'], 404);
+        }
+    
+        // Validasi hanya bidang-bidang tertentu yang diizinkan diubah
+        $validator = Validator::make($request->all(), [
+            'nama_warung' => 'required',
+            'area' => 'required',
+            'alamat_warung' => 'required',
+            'contact_warung' => 'required',
+        ]);
+    
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 400);
+        }
+
+        $lapak->area = $request->input('area');
+        $lapak->alamat_warung = $request->input('alamat_warung');
+        $lapak->contact_warung = $request->input('contact_warung');
+        $lapak->save();
+    
+        return response()->json(['message' => 'Data lapak berhasil diperbarui'], 200);
+    }    
+    
+    
+    public function deleteLapak($id)
+    {
+        $lapak = Lapak::find($id);
+    
+        if (!$lapak) {
+            return response()->json(['message' => 'Data lapak tidak ditemukan'], 404);
+        }
+    
+        $lapak->delete();
+    
+        return response()->json(['message' => 'Data lapak berhasil dihapus'], 200);
+    }
+    
+
 }
