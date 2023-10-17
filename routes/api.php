@@ -4,6 +4,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\api\RegisterController;
 use App\Http\Controllers\api\LapakController;
+use App\Http\Controllers\api\LoginController;
+use App\Http\Controllers\api\KurirController;
+
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -27,5 +31,7 @@ Route::post('/login', App\Http\Controllers\api\LoginController::class)->name('lo
 //Lapak
 Route::post('/lapak', 'App\Http\Controllers\Api\LapakController@addLapak');
 Route::get('/lapak', 'App\Http\Controllers\Api\LapakController@getLapak');
-Route::put('/lapak/{id}', 'App\Http\Controllers\Api\LapakController@updateLapak');
-Route::delete('/lapak/{id}', 'App\Http\Controllers\Api\LapakController@deleteLapak');
+
+//admin
+Route::get('/getData', [KurirController::class, 'getData']);
+
