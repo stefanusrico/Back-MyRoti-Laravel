@@ -9,7 +9,6 @@ use App\Models\User;
 class DataKoordinator extends Controller{
   public function getData(){
     $koordinator = User::where('role', 'Koordinator')->get();
-    return response()->json($koordinator, 200);  
-    
+    return response()->json($koordinator, 200);
   }
 }
