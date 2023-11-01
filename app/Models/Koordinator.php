@@ -10,6 +10,7 @@ class Koordinator extends Model
     use HasFactory;
 
     protected $table = 'koordinator';
+    protected $primaryKey = 'id';
 
     public function user()
     {

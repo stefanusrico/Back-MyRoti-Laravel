@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\api\AdminController;
 use App\Http\Controllers\api\AreaController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\api\AuthController;
@@ -28,5 +29,8 @@ Route::post('/area', [AreaController::class, 'store']);
 
 
 Route::get('/kurir-by-area', [KurirController::class, 'getKurirByArea']);
+
+
+Route::get('/data-koordinator', [AdminController::class, 'getDataKoordinator']);
 
 //test
