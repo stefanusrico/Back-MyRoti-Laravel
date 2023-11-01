@@ -28,3 +28,5 @@ Route::post('/area', [AreaController::class, 'store']);
 
 
 Route::get('/kurir-by-area', [KurirController::class, 'getKurirByArea']);
+
+//test
