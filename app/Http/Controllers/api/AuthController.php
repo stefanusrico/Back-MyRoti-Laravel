@@ -61,7 +61,7 @@ class AuthController extends Controller
             $user->koordinator()->save($koordinator);
         } elseif ($request->input('role') === 'Keuangan') {
             $keuangan = new Keuangan();
-            // Isi data keuangan jika ada
+            $keuangan->nama_keuangan = $user->name;
             $user->keuangan()->save($keuangan);
         }
 

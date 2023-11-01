@@ -32,5 +32,7 @@ Route::get('/kurir-by-area', [KurirController::class, 'getKurirByArea']);
 
 
 Route::get('/data-koordinator', [AdminController::class, 'getDataKoordinator']);
+Route::get('/data-keuangan', [AdminController::class, 'getDataKeuangan']);
+Route::get('/data-kurir', [AdminController::class, 'getDataKurir']);
 
 //test

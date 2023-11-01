@@ -9,6 +9,9 @@ class Keuangan extends Model
 {
     use HasFactory;
 
+    protected $table = 'keuangan';
+    protected $primaryKey = 'id';
+
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
