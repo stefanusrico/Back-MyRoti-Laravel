@@ -17,15 +17,12 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
-    // protected $fillable = [
-    //     'name',
-    //     'email',
-    //     'password',
-    // ];
-
-    protected $guarded = ['id'];
-
-    protected $table = 'users';
+    protected $fillable = [
+        'name',
+        'username',
+        'password',
+        'role',
+    ];
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -45,4 +42,24 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function pemilik()
+    {
+        return $this->hasOne(Pemilik::class);
+    }
+
+    public function kurir()
+    {
+        return $this->hasOne(Kurir::class);
+    }
+
+    public function koordinator()
+    {
+        return $this->hasOne(Koordinator::class);
+    }
+
+    public function keuangan()
+    {
+        return $this->hasOne(Keuangan::class);
+    }
 }

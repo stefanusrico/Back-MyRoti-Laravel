@@ -1,13 +1,8 @@
 <?php
 
-use App\Http\Controllers\Api\DataKeuangan;
-use App\Http\Controllers\Api\DataKurir;
-use App\Http\Controllers\Api\DataKoordinator;
-use Illuminate\Http\Request;
+use App\Http\Controllers\api\AreaController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\api\RegisterController;
-use App\Http\Controllers\api\LapakController;
-use App\Http\Controllers\api\LoginController;
+use App\Http\Controllers\api\AuthController;
 use App\Http\Controllers\api\KurirController;
 
 /*
@@ -21,26 +16,15 @@ use App\Http\Controllers\api\KurirController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
-//Auth
-Route::post('/registrasi', App\Http\Controllers\api\RegisterController::class)->name('registrasi');
-Route::get('/registrasi', 'App\Http\Controllers\Api\RegisterController@getRole');
-Route::post('/login', App\Http\Controllers\api\LoginController::class)->name('login');
-
-//Lapak
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 
 Route::post('/lapak', 'App\Http\Controllers\Api\LapakController@addLapak');
 Route::get('/lapak', 'App\Http\Controllers\Api\LapakController@getLapak');
-
-//admin
-Route::get('/getData', [KurirController::class, 'getData']);
-Route::put('/lapak/{id}', 'App\Http\Controllers\Api\LapakController@updateLapak');
 Route::delete('/lapak/{id}', 'App\Http\Controllers\Api\LapakController@deleteLapak');
 
-//Admin
-Route::get('/data-kurir', [DataKurir::class, 'getData']);
-Route::get('/data-koordinator', [DataKoordinator::class, 'getData']);
-Route::get('/data-keuangan', [DataKeuangan::class, 'getData']);
+Route::post('/area', [AreaController::class, 'store']);
+
+
+Route::get('/kurir-by-area', [KurirController::class, 'getKurirByArea']);
