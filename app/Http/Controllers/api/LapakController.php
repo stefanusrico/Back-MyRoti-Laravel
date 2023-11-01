@@ -54,7 +54,7 @@ class LapakController extends Controller
         // Mengubah data yang dikembalikan
         $lapakData = $lapak->map(function ($lapak) {
             return [
-                'id' => $lapak->id,
+                'id_lapak' => $lapak->id,
                 'nama_lapak' => $lapak->nama_lapak,
                 'area' => $lapak->area->nama_area,
                 'alamat_lapak' => $lapak->alamat_lapak,
@@ -67,6 +67,18 @@ class LapakController extends Controller
         // <console class="log">$lapakData</console>
         return response()->json($lapakData, 200);
     }
+
+    public function showData($id)
+    {
+        try{
+            $lapak = Lapak::findOrFail($id);
+            return response()->json($lapak);
+        }
+        catch(\Exception $e){
+            return response()->json(['message' => 'lapak tidak ditemukan'], 404);
+        }
+    }
+
 
     public function updateLapak(Request $request, $id)
     {
