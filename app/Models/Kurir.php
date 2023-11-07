@@ -21,8 +21,9 @@ class Kurir extends Model
 
     public function area()
     {
-        return $this->hasMany(Area::class);
+        return $this->belongsTo(Area::class, 'area_id');
     }
+
 
     public function alokasi()
     {

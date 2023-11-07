@@ -9,6 +9,10 @@ class Alokasi extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['koordinator_id', 'kurir_id', 'roti_id', 'jumlah_roti_alokasi'];
+
+    protected $table = 'alokasi';
+
     public function koordinator()
     {
         return $this->belongsTo(Koordinator::class, 'koordinator_id');

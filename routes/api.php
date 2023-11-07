@@ -2,9 +2,12 @@
 
 use App\Http\Controllers\api\AdminController;
 use App\Http\Controllers\api\AreaController;
+use App\Http\Controllers\api\RotiController;
+use App\Http\Controllers\api\KurirController;
+use App\Http\Controllers\api\AlokasiController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\api\AuthController;
-use App\Http\Controllers\api\KurirController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -29,10 +32,17 @@ Route::post('/area', [AreaController::class, 'store']);
 
 
 Route::get('/kurir-by-area', [KurirController::class, 'getKurirByArea']);
+Route::get('/kurir', 'App\Http\Controllers\api\KurirController@getKurir');
+Route::get('/kurir/{id}', 'App\Http\Controllers\api\KurirController@showData');
 
 
 Route::get('/data-koordinator', [AdminController::class, 'getDataKoordinator']);
 Route::get('/data-keuangan', [AdminController::class, 'getDataKeuangan']);
 Route::get('/data-kurir', [AdminController::class, 'getDataKurir']);
 
+Route::post('/alokasi', 'App\Http\Controllers\Api\AlokasiController@addAlokasi');
+Route::get('/alokasi', 'App\Http\Controllers\Api\AlokasiController@getAlokasi');
+
+Route::post('/roti', 'App\Http\Controllers\Api\RotiController@addRoti');
+Route::get('/roti', 'App\Http\Controllers\Api\RotiController@getRoti');
 //test

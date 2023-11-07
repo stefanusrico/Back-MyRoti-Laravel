@@ -22,4 +22,36 @@ class KurirController extends Controller
 
         return response()->json($kurir);
     }
+
+
+    public function getKurir()
+    {
+        $kurir = Kurir::all();
+
+        // Mengubah data yang dikembalikan
+        $kurirData = $kurir->map(function ($kurir) {
+            return [
+                'id' => $kurir->id,
+                'user_id' => $kurir->user_id,
+                'nama_kurir' => $kurir->nama_kurir,
+                'area' => $kurir->area->nama_area,
+                
+            ];
+        });
+
+        // Kembalikan data lapak dalam format JSON
+        // <console class="log">$lapakData</console>
+        return response()->json($kurirData, 200);
+    }
+
+    public function showData($id)
+    {
+        try{
+            $kurir = Kurir::findOrFail($id);
+            return response()->json($kurir);
+        }
+        catch(\Exception $e){
+            return response()->json(['message' => 'kurir tidak ditemukan'], 404);
+        }
+    }
 }
