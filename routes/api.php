@@ -39,6 +39,7 @@ Route::get('/kurir', 'App\Http\Controllers\api\KurirController@getKurir');
 Route::get('/kurir/{id}', 'App\Http\Controllers\api\KurirController@showData');
 Route::put('/update-kurir/{id}', 'App\Http\Controllers\api\AdminController@updateKurir');
 Route::put('/update-user-password/{id}', 'App\Http\Controllers\api\AdminController@updateKurirPassword');
+Route::delete('/data-kurir/{id}', 'App\Http\Controllers\api\AdminController@deleteKurir');
 
 
 Route::get('/data-koordinator', [AdminController::class, 'getDataKoordinator']);
