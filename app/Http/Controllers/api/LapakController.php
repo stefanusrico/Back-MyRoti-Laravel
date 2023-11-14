@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use App\Models\Lapak;
+use App\Models\Area;
 
 class LapakController extends Controller
 {
@@ -69,44 +70,53 @@ class LapakController extends Controller
     }
 
     public function showData($id)
-    {
-        try{
-            $lapak = Lapak::findOrFail($id);
-            return response()->json($lapak);
-        }
-        catch(\Exception $e){
-            return response()->json(['message' => 'lapak tidak ditemukan'], 404);
-        }
-    }
+{
+    try {
+        $lapak = Lapak::findOrFail($id);
 
+        $select = ['id', 'nama_lapak', 'alamat_lapak', 'area_id', 'contact_lapak', 'image'];
+        $lapak = $lapak->select($select)->first();
+
+        $lapak->image = asset('storage/lapak_images/' . $lapak->image);
+
+        return response()->json($lapak);
+    } catch (\Exception $e) {
+        return response()->json(['message' => 'lapak tidak ditemukan'], 404);
+    }
+}
 
     public function updateLapak(Request $request, $id)
-    {
-        $lapak = Lapak::find($id);
+{
+    $lapak = Lapak::find($id);
 
-        if (!$lapak) {
-            return response()->json(['message' => 'Data lapak tidak ditemukan'], 404);
-        }
-
-        // Validasi hanya bidang-bidang tertentu yang diizinkan diubah
-        $validator = Validator::make($request->all(), [
-            'nama_lapak' => 'required',
-            'area' => 'required',
-            'alamat_lapak' => 'required',
-            'contact_lapak' => 'required',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()], 400);
-        }
-
-        $lapak->area = $request->input('area');
-        $lapak->alamat_lapak = $request->input('alamat_lapak');
-        $lapak->contact_lapak = $request->input('contact_lapak');
-        $lapak->save();
-
-        return response()->json(['message' => 'Data lapak berhasil diperbarui'], 200);
+    if (!$lapak) {
+        return response()->json(['message' => 'Data lapak tidak ditemukan'], 404);
     }
+
+    // Validasi hanya bidang-bidang tertentu yang diizinkan diubah
+    $validator = Validator::make($request->all(), [
+    'area_id' => 'required',
+    'alamat_lapak' => 'required',
+    'contact_lapak' => 'required',
+    ]);
+
+    if ($validator->fails()) {
+        return response()->json(['error' => $validator->errors()], 400);
+    }
+
+    // Pastikan area_id yang diberikan ada dalam basis data
+    $area = Area::find($request->input('area_id'));
+    if (!$area) {
+        return response()->json(['message' => 'Area tidak ditemukan'], 404);
+    }
+
+    $lapak->area_id = $request->input('area_id');
+    $lapak->alamat_lapak = $request->input('alamat_lapak');
+    $lapak->contact_lapak = $request->input('contact_lapak');
+    $lapak->save();
+
+    return response()->json(['message' => 'Data lapak berhasil diperbarui'], 200);
+}
 
     public function deleteLapak($id)
     {

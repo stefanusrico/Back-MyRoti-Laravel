@@ -26,7 +26,9 @@ Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanc
 
 Route::post('/lapak', 'App\Http\Controllers\Api\LapakController@addLapak');
 Route::get('/lapak', 'App\Http\Controllers\Api\LapakController@getLapak');
+Route::get('/lapak/{id}', 'App\Http\Controllers\Api\LapakController@showData');
 Route::delete('/lapak/{id}', 'App\Http\Controllers\Api\LapakController@deleteLapak');
+Route::put('/update-lapak/{id}', 'App\Http\Controllers\Api\LapakController@updateLapak');
 
 Route::post('/area', [AreaController::class, 'store']);
 
