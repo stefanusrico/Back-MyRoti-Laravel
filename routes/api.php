@@ -32,18 +32,18 @@ Route::put('/update-lapak/{id}', 'App\Http\Controllers\Api\LapakController@updat
 
 Route::post('/area', [AreaController::class, 'store']);
 
-
+Route::get('/data-kurir', [AdminController::class, 'getDataKurir']);
+Route::get('/data-kurir/{id}', [AdminController::class, 'getDataKurirById']);
 Route::get('/kurir-by-area', [KurirController::class, 'getKurirByArea']);
 Route::get('/kurir', 'App\Http\Controllers\api\KurirController@getKurir');
 Route::get('/kurir/{id}', 'App\Http\Controllers\api\KurirController@showData');
+Route::put('/update-kurir/{id}', 'App\Http\Controllers\api\AdminController@updateKurir');
+Route::put('/update-user-password/{id}', 'App\Http\Controllers\api\AdminController@updateKurirPassword');
 
 
 Route::get('/data-koordinator', [AdminController::class, 'getDataKoordinator']);
 Route::get('/data-keuangan', [AdminController::class, 'getDataKeuangan']);
 Route::get('/data-kurir', [AdminController::class, 'getDataKurir']);
-
-Route::post('/alokasi', 'App\Http\Controllers\Api\AlokasiController@addAlokasi');
-Route::get('/alokasi', 'App\Http\Controllers\Api\AlokasiController@getAlokasi');
 
 Route::post('/roti', 'App\Http\Controllers\Api\RotiController@addRoti');
 Route::get('/roti', 'App\Http\Controllers\Api\RotiController@getRoti');

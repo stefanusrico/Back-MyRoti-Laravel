@@ -21,6 +21,7 @@ class User extends Authenticatable
         'name',
         'username',
         'password',
+        'password_unhashed',
         'role',
     ];
     /**
@@ -42,6 +43,13 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function updateUser(array $data)
+    {
+        $this->fill($data);
+
+        $this->save();
+    }
 
     public function pemilik()
     {

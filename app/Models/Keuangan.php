@@ -9,6 +9,8 @@ class Keuangan extends Model
 {
     use HasFactory;
 
+
+    protected $fillable = ["nama_keuangan", "user_id"];
     protected $table = 'keuangan';
     protected $primaryKey = 'id';
 

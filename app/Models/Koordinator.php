@@ -9,6 +9,7 @@ class Koordinator extends Model
 {
     use HasFactory;
 
+    protected $fillable = ["nama_koordinator", "user_id"];
     protected $table = 'koordinator';
     protected $primaryKey = 'id';
 

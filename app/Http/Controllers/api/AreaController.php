@@ -11,7 +11,7 @@ class AreaController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nama_area' => 'required|string|max:255',
+            'nama_area' => 'required|string|max:255|unique:area',
         ]);
 
         Area::create([
