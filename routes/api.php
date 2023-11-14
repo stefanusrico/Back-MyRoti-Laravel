@@ -23,6 +23,7 @@ use App\Http\Controllers\api\AuthController;
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
+Route::get('get-amount-user', 'App\Http\Controllers\api\AdminController@getAmountUser');
 
 Route::post('/lapak', 'App\Http\Controllers\Api\LapakController@addLapak');
 Route::get('/lapak', 'App\Http\Controllers\Api\LapakController@getLapak');
@@ -40,12 +41,18 @@ Route::get('/kurir/{id}', 'App\Http\Controllers\api\KurirController@showData');
 Route::put('/update-kurir/{id}', 'App\Http\Controllers\api\AdminController@updateKurir');
 Route::put('/update-user-password/{id}', 'App\Http\Controllers\api\AdminController@updateKurirPassword');
 Route::delete('/data-kurir/{id}', 'App\Http\Controllers\api\AdminController@deleteKurir');
+Route::get('get-amount-kurir', 'App\Http\Controllers\api\AdminController@getAmountKurir');
 
 
 Route::get('/data-koordinator', [AdminController::class, 'getDataKoordinator']);
+Route::get('get-amount-koordinator', 'App\Http\Controllers\api\AdminController@getAmountKoordinator');
+
 Route::get('/data-keuangan', [AdminController::class, 'getDataKeuangan']);
-Route::get('/data-kurir', [AdminController::class, 'getDataKurir']);
+Route::get('get-amount-keuangan', 'App\Http\Controllers\api\AdminController@getAmountKeuangan');
+
+
 
 Route::post('/roti', 'App\Http\Controllers\Api\RotiController@addRoti');
 Route::get('/roti', 'App\Http\Controllers\Api\RotiController@getRoti');
+
 //test
