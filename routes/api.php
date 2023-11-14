@@ -39,16 +39,24 @@ Route::get('/kurir-by-area', [KurirController::class, 'getKurirByArea']);
 Route::get('/kurir', 'App\Http\Controllers\api\KurirController@getKurir');
 Route::get('/kurir/{id}', 'App\Http\Controllers\api\KurirController@showData');
 Route::put('/update-kurir/{id}', 'App\Http\Controllers\api\AdminController@updateKurir');
-Route::put('/update-user-password/{id}', 'App\Http\Controllers\api\AdminController@updateKurirPassword');
-Route::delete('/data-kurir/{id}', 'App\Http\Controllers\api\AdminController@deleteKurir');
+Route::put('/update-kurir-password/{id}', 'App\Http\Controllers\api\AdminController@updateKurirPassword');
+Route::delete('/delete-kurir/{id}', 'App\Http\Controllers\api\AdminController@deleteKurir');
 Route::get('get-amount-kurir', 'App\Http\Controllers\api\AdminController@getAmountKurir');
 
 
 Route::get('/data-koordinator', [AdminController::class, 'getDataKoordinator']);
+Route::get('/data-koordinator/{id}', [AdminController::class, 'getDataKoordinatorById']);
 Route::get('get-amount-koordinator', 'App\Http\Controllers\api\AdminController@getAmountKoordinator');
+Route::delete('/delete-koordinator/{id}', 'App\Http\Controllers\api\AdminController@deleteKoordinator');
+Route::put('/update-koordinator/{id}', 'App\Http\Controllers\api\AdminController@updateKoordinator');
+Route::put('/update-koordinator-password/{id}', 'App\Http\Controllers\api\AdminController@updateKoordinatorPassword');
 
 Route::get('/data-keuangan', [AdminController::class, 'getDataKeuangan']);
+Route::get('/data-keuangan/{id}', [AdminController::class, 'getDataKeuanganById']);
 Route::get('get-amount-keuangan', 'App\Http\Controllers\api\AdminController@getAmountKeuangan');
+Route::delete('/delete-keuangan/{id}', 'App\Http\Controllers\api\AdminController@deleteKeuangan');
+Route::put('/update-keuangan/{id}', 'App\Http\Controllers\api\AdminController@updateKeuangan');
+Route::put('/update-keuangan-password/{id}', 'App\Http\Controllers\api\AdminController@updateKeuanganPassword');
 
 
 

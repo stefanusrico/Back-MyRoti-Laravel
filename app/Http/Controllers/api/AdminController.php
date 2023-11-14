@@ -15,313 +15,435 @@ use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
-    public function getAmountUser(){
+    public function getAmountUser()
+    {
         $jumlahUser = User::count();
 
         return response()->json($jumlahUser);
     }
-    
-    public function getAmountKoordinator(){
+
+    public function getAmountKoordinator()
+    {
         $jumlahKoordinator = Koordinator::count();
 
         return response()->json($jumlahKoordinator);
     }
 
-    public function updateKoordinator(Request $request, $id) {
-    try {
+
+    public function getDataKoordinator()
+    {
+        $koordinators = Koordinator::with('user')->get();
+
+        $data = [];
+
+        foreach ($koordinators as $koordinator) {
+            $data[] = [
+                'id' => $koordinator->id,
+                'name' => $koordinator->user->name,
+                'username' => $koordinator->user->username,
+                'password' => ($koordinator->user->password_unhashed),
+                'role' => $koordinator->user->role,
+            ];
+        }
+
+        return response()->json($data);
+    }
+
+    public function deleteKoordinator($id)
+    {
         $koordinator = Koordinator::find($id);
 
         if (!$koordinator) {
             return response()->json(['message' => 'Koordinator not found'], 404);
         }
 
-        $validatedData = $request->validate([
-            'nama_koordinator' => 'required|string',
-        ]);
+        $koordinator->delete();
 
-        // Perbarui data Kurir
-        $koordinator->update($validatedData);
 
-        return response()->json(['message' => 'Koordinator updated successfully']);
-    } catch (Exception $e) {
-        return response()->json(['message' => 'Error updating Koordinator'], 500);
+        return response()->json(['message' => 'Koordinator deleted successfully'], 200);
     }
-}
 
-    public function getDataKoordinator() {
-    $koordinators = Koordinator::with('user')->get();
+    public function getDataKoordinatorById($id)
+    {
+        if (!is_numeric($id)) {
+            return response()->json(['message' => 'Invalid ID'], 400);
+        }
 
-    $data = [];
+        // Query untuk mengambil data kurir berdasarkan ID
+        $koordinator = Koordinator::with('user')->find($id);
 
-    foreach ($koordinators as $koordinator) {
-        $data[] = [
-            'id' => $koordinator->id,
-            'name' => $koordinator->user->name,
-            'username' => $koordinator->user->username,
-            'password' => ($koordinator->user->password_unhashed),
-            'role' => $koordinator->user->role,
+        if (!$koordinator) {
+            return response()->json(['message' => 'Kurir not found'], 404);
+        }
+
+        $data = [
+            'nama_koordinator' => $koordinator->nama_koordinator,
+            'password' => $koordinator->user->password_unhashed,
         ];
+
+        return response()->json($data);
     }
 
-    return response()->json($data);
+    public function updateKoordinator(Request $request, $id)
+    {
+        try {
+            $koordinator = Koordinator::find($id);
+
+            if (!$koordinator) {
+                return response()->json(['message' => 'Koordinator not found'], 404);
+            }
+
+            $validatedData = $request->validate([
+                'nama_koordinator' => 'required|string',
+            ]);
+
+            // Perbarui data Kurir
+            $koordinator->update($validatedData);
+            $user = $koordinator->user;
+            $user->name = $validatedData['nama_koordinator'];
+            $user->save();
+
+            return response()->json(['message' => 'Koordinator updated successfully']);
+        } catch (Exception $e) {
+            return response()->json(['message' => 'Error updating Koordinator'], 500);
+        }
     }
 
-    public function deleteKoordinator($id){
-    $koordinator = Koordinator::find($id);
+    public function updateKoordinatorPassword(Request $request, $id)
+    {
+        try {
+            $koordinator = Koordinator::find($id);
 
-    if (!$koordinator) {
-        return response()->json(['message' => 'Koordinator not found'], 404);
+            if (!$koordinator) {
+                return response()->json(['message' => 'Koordinator not found'], 404);
+            }
+
+            $validatedData = $request->validate([
+                'password' => 'required|string',
+            ]);
+
+            $encryptedPassword = Hash::make($validatedData['password']);
+            $unhashedPassword = ($validatedData['password']);
+            $koordinator->user->password = $encryptedPassword;
+            $koordinator->user->password_unhashed = $unhashedPassword;
+            $koordinator->user->save();
+
+
+            return response()->json(['message' => 'Koordinator password updated successfully']);
+
+        } catch (Exception $e) {
+            return response()->json(['message' => 'Error updating Koordinator password'], 500);
+        }
     }
 
-    $koordinator->delete();
-
-
-    return response()->json(['message' => 'Koordinator deleted successfully'], 200);
-}
-
-    public function getAmountKeuangan(){
+    public function getAmountKeuangan()
+    {
         $jumlahKeuangan = Keuangan::count();
 
         return response()->json($jumlahKeuangan);
     }
 
-    public function updateKeuangan(Request $request, $id) {
-    try {
+    public function updateKeuangan(Request $request, $id)
+    {
+        try {
+            $keuangan = Keuangan::find($id);
+
+            if (!$keuangan) {
+                return response()->json(['message' => 'Keuangan not found'], 404);
+            }
+
+            $validatedData = $request->validate([
+                'nama_keuangan' => 'required|string',
+            ]);
+
+            // Perbarui data Kurir
+            $keuangan->update($validatedData);
+            $user = $keuangan->user;
+            $user->name = $validatedData['nama_keuangan'];
+            $user->save();
+
+
+            return response()->json(['message' => 'Keuangan updated successfully']);
+        } catch (Exception $e) {
+            return response()->json(['message' => 'Error updating Keuangan'], 500);
+        }
+    }
+
+    public function updateKeuanganPassword(Request $request, $id)
+    {
+        try {
+            $keuangan = Keuangan::find($id);
+
+            if (!$keuangan) {
+                return response()->json(['message' => 'Keuangan not found'], 404);
+            }
+
+            $validatedData = $request->validate([
+                'password' => 'required|string',
+            ]);
+
+            $encryptedPassword = Hash::make($validatedData['password']);
+            $unhashedPassword = ($validatedData['password']);
+            $keuangan->user->password = $encryptedPassword;
+            $keuangan->user->password_unhashed = $unhashedPassword;
+            $keuangan->user->save();
+
+
+            return response()->json(['message' => 'Keuangan password updated successfully']);
+
+        } catch (Exception $e) {
+            return response()->json(['message' => 'Error updating Keuangan password'], 500);
+        }
+    }
+
+    public function getDataKeuangan()
+    {
+        $keuangans = Keuangan::with('user')->get();
+
+        $data = [];
+
+        foreach ($keuangans as $keuangan) {
+            $data[] = [
+                'id' => $keuangan->id,
+                'name' => $keuangan->user->name,
+                'username' => $keuangan->user->username,
+                'password' => ($keuangan->user->password_unhashed),
+                'role' => $keuangan->user->role,
+            ];
+        }
+
+        return response()->json($data);
+    }
+
+    public function getDataKeuanganById($id)
+    {
+        if (!is_numeric($id)) {
+            return response()->json(['message' => 'Invalid ID'], 400);
+        }
+
+        $keuangan = Keuangan::with('user')->find($id);
+
+        if (!$keuangan) {
+            return response()->json(['message' => 'Keuangan not found'], 404);
+        }
+
+        $data = [
+            'nama_keuangan' => $keuangan->nama_keuangan,
+            'password' => $keuangan->user->password_unhashed,
+        ];
+
+        return response()->json($data);
+    }
+
+    public function deleteKeuangan($id)
+    {
         $keuangan = Keuangan::find($id);
 
         if (!$keuangan) {
             return response()->json(['message' => 'Keuangan not found'], 404);
         }
 
-        $validatedData = $request->validate([
-            'nama_keuangan' => 'required|string',
-        ]);
+        $keuangan->delete();
 
-        // Perbarui data Kurir
-        $keuangan->update($validatedData);
-
-        return response()->json(['message' => 'Keuangan updated successfully']);
-    } catch (Exception $e) {
-        return response()->json(['message' => 'Error updating Keuangan'], 500);
-    }
-}
-
-    public function getDataKeuangan() {
-    $keuangans = Keuangan::with('user')->get();
-
-    $data = [];
-
-    foreach ($keuangans as $keuangan) {
-        $data[] = [
-            'id' => $keuangan->id,
-            'name' => $keuangan->user->name,
-            'username' => $keuangan->user->username,
-            'password' => ($keuangan->user->password_unhashed),
-            'role' => $keuangan->user->role,
-        ];
+        return response()->json(['message' => 'Keuangan deleted successfully'], 200);
     }
 
-    return response()->json($data);
-    }
-
-    public function deleteKeuangan($id){
-    $keuangan = Keuangan::find($id);
-
-    if (!$keuangan) {
-        return response()->json(['message' => 'Keuangan not found'], 404);
-    }
-
-    $keuangan->delete();
-
-    return response()->json(['message' => 'Keuangan deleted successfully'], 200);
-}
-
-    public function getAmountKurir(){
+    public function getAmountKurir()
+    {
         $jumlahKurir = Kurir::count();
 
         return response()->json($jumlahKurir);
     }
 
-public function getDataKurir() {
-    Kurir::forgetCache();
+    public function getDataKurir()
+    {
+        $kurirs = Kurir::with('user')->get();
 
-    $kurirs = Kurir::with('user')->get();
+        $data = [];
 
-    $data = [];
+        foreach ($kurirs as $kurir) {
+            $data[] = [
+                'id' => $kurir->id,
+                'name' => $kurir->user->name,
+                'username' => $kurir->user->username,
+                'password' => ($kurir->user->password_unhashed),
+                'role' => $kurir->user->role,
+                'area_id' => $kurir->area_id,
+            ];
+        }
 
-    foreach ($kurirs as $kurir) {
-        $data[] = [
-            'id' => $kurir->id,
-            'name' => $kurir->user->name,
-            'username' => $kurir->user->username,
-            'password' => ($kurir->user->password_unhashed),
-            'role' => $kurir->user->role,
-            'area_id' => $kurir->area_id,
-        ];
-    }  
-
-    return response()->json($data);
-}
+        return response()->json($data);
+    }
 
 
     public function getDataKurirById($id)
-{
-    // Validasi ID, misalnya pastikan ID adalah bilangan bulat
-    if (!is_numeric($id)) {
-        return response()->json(['message' => 'Invalid ID'], 400);
-    }
+    {
+        // Validasi ID, misalnya pastikan ID adalah bilangan bulat
+        if (!is_numeric($id)) {
+            return response()->json(['message' => 'Invalid ID'], 400);
+        }
 
-    // Query untuk mengambil data kurir berdasarkan ID
-    $kurir = Kurir::find($id);
-
-    if (!$kurir) {
-        return response()->json(['message' => 'Kurir not found'], 404);
-    }
-
-    return response()->json($kurir);
-}
-
-
-public function deleteKurir($id){
-    try {
-        $kurir = Kurir::find($id);
+        // Query untuk mengambil data kurir berdasarkan ID
+        $kurir = Kurir::with('user')->find($id);
 
         if (!$kurir) {
             return response()->json(['message' => 'Kurir not found'], 404);
         }
 
-        $kurir->delete();
+        $data = [
+            'nama_kurir' => $kurir->nama_kurir,
+            'area_id' => $kurir->area_id,
+            'password' => $kurir->user->password_unhashed,
+        ];
 
-        return response()->json(['message' => 'Kurir deleted successfully'], 200);
-    } catch (\Exception $e) {
-        return response()->json(['message' => 'Error deleting Kurir', 'error' => $e->getMessage()], 500);
+        return response()->json($data);
     }
-}
 
 
-public function updateKurir(Request $request, $id) {
-    try {
-        $kurir = Kurir::find($id);
+    public function deleteKurir($id)
+    {
+        try {
+            $kurir = Kurir::find($id);
 
-        if (!$kurir) {
-            return response()->json(['message' => 'Kurir not found'], 404);
+            if (!$kurir) {
+                return response()->json(['message' => 'Kurir not found'], 404);
+            }
+
+            $kurir->delete();
+
+            return response()->json(['message' => 'Kurir deleted successfully'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Error deleting Kurir', 'error' => $e->getMessage()], 500);
         }
-
-        $validatedData = $request->validate([
-            'nama_kurir' => 'required|string',
-            'area_id' => 'required',
-        ]);
-
-        // Perbarui data Kurir
-        $kurir->update($validatedData);
-        $user = $kurir->user;
-        $user->name = $validatedData['nama_kurir'];
-        $user->save();
-
-        return response()->json(['message' => 'Kurir updated successfully']);
-    } catch (Exception $e) {
-        return response()->json(['message' => 'Error updating Kurir'], 500);
     }
-}
 
-public function updateKurirPassword(Request $request, $id){
-    try{
-        $kurir = Kurir::find($id);
-        
-        if (!$kurir) {
-            return response()->json(['message' => 'Kurir not found'], 404);
+
+    public function updateKurir(Request $request, $id)
+    {
+        try {
+            $kurir = Kurir::find($id);
+
+            if (!$kurir) {
+                return response()->json(['message' => 'Kurir not found'], 404);
+            }
+
+            $validatedData = $request->validate([
+                'nama_kurir' => 'required|string',
+                'area_id' => 'required',
+            ]);
+
+            // Perbarui data Kurir
+            $kurir->update($validatedData);
+            $user = $kurir->user;
+            $user->name = $validatedData['nama_kurir'];
+            $user->save();
+
+            return response()->json(['message' => 'Kurir updated successfully']);
+        } catch (Exception $e) {
+            return response()->json(['message' => 'Error updating Kurir'], 500);
         }
-
-        $validatedData = $request->validate([
-            'password' => 'required|string',
-        ]);
-
-        $encryptedPassword = Hash::make($validatedData['password']);
-        $unhashedPassword = ($validatedData['password']);
-        $kurir->user->password = $encryptedPassword;
-        $kurir->user->password_unhashed = $unhashedPassword;
-        $kurir->user->save();
-
-        
-       return response()->json(['message' => 'Kurir password updated successfully']);
-
-    }catch(Exception $e){
-        return response()->json(['message' => 'Error updating Kurir password'], 500);
     }
-}
 
-public function updateUserPassword(Request $request, $id) {
-    try {
-        $user = User::find($id);
+    public function updateKurirPassword(Request $request, $id)
+    {
+        try {
+            $kurir = Kurir::find($id);
 
-        if (!$user) {
-            return response()->json(['message' => 'User not found'], 404);
+            if (!$kurir) {
+                return response()->json(['message' => 'Kurir not found'], 404);
+            }
+
+            $validatedData = $request->validate([
+                'password' => 'required|string',
+            ]);
+
+            $encryptedPassword = Hash::make($validatedData['password']);
+            $unhashedPassword = ($validatedData['password']);
+            $kurir->user->password = $encryptedPassword;
+            $kurir->user->password_unhashed = $unhashedPassword;
+            $kurir->user->save();
+
+
+            return response()->json(['message' => 'Kurir password updated successfully']);
+
+        } catch (Exception $e) {
+            return response()->json(['message' => 'Error updating Kurir password'], 500);
         }
-
-        $validatedData = $request->validate([
-            'password' => 'required|string',
-        ]);
-
-        // Enkripsi password baru sebelum menyimpannya
-        $encryptedPassword = Hash::make($validatedData['password']);
-        $unhashedPassword = ($validatedData['password']);
-        $user->password = $encryptedPassword;
-        $user->password_unhashed = $unhashedPassword;
-        $user->save();
-
-        return response()->json(['message' => 'User password updated successfully']);
-    } catch (Exception $e) {
-        return response()->json(['message' => 'Error updating user password'], 500);
     }
-}
+
+    public function updateUserPassword(Request $request, $id)
+    {
+        try {
+            $user = User::find($id);
+
+            if (!$user) {
+                return response()->json(['message' => 'User not found'], 404);
+            }
+
+            $validatedData = $request->validate([
+                'password' => 'required|string',
+            ]);
+
+            // Enkripsi password baru sebelum menyimpannya
+            $encryptedPassword = Hash::make($validatedData['password']);
+            $unhashedPassword = ($validatedData['password']);
+            $user->password = $encryptedPassword;
+            $user->password_unhashed = $unhashedPassword;
+            $user->save();
+
+            return response()->json(['message' => 'User password updated successfully']);
+        } catch (Exception $e) {
+            return response()->json(['message' => 'Error updating user password'], 500);
+        }
+    }
 
 
-// public function updateUser(Request $request, $id)
+    // public function updateUser(Request $request, $id)
 // {
 //     try {
 //         $user = User::find($id);
 
-//         if (!$user) {
+    //         if (!$user) {
 //             return response()->json(['message' => 'User not found'], 404);
 //         }
 
-//         $validatedData = $request->validate([
+    //         $validatedData = $request->validate([
 //             'name' => 'required|string',
 //             'username' => 'required|string',
 //             'role' => 'string', // Jadikan 'role' sebagai opsi
 //         ]);
 
-//         // Update data pengguna (User)
+    //         // Update data pengguna (User)
 //         $user->fill($validatedData);
 //         $user->save();
 
-//         // Anda dapat memisahkan pembaruan data berdasarkan peran (role) di bawah ini
+    //         // Anda dapat memisahkan pembaruan data berdasarkan peran (role) di bawah ini
 //         if (isset($validatedData['role'])) {
 //             if ($validatedData['role'] === 'Koordinator') {
 //                 $koordinator = Koordinator::where('user_id', $user->id)->first();
 
-//                 if ($koordinator) {
+    //                 if ($koordinator) {
 //                     $koordinator->nama_koordinator = $validatedData['name'];
 //                     $koordinator->save();
 //                 }
 //             }
 
-//             if ($validatedData['role'] === 'Keuangan') {
+    //             if ($validatedData['role'] === 'Keuangan') {
 //                 $keuangan = Keuangan::where('user_id', $user->id)->first();
 
-//                 if ($keuangan) {
+    //                 if ($keuangan) {
 //                     $keuangan->nama_keuangan = $validatedData['name'];
 //                     $keuangan->save();
 //                 }
 //             }
 
-//             if ($validatedData['role'] === 'Kurir') {
+    //             if ($validatedData['role'] === 'Kurir') {
 //                 $kurir = Kurir::where('user_id', $user->id)->first();
 
-//                 if ($kurir) {
+    //                 if ($kurir) {
 //                     $kurir->nama_kurir = $validatedData['name'];
 
-//                     if ($request->has('area_id')) {
+    //                     if ($request->has('area_id')) {
 //                         $kurir->area_id = $request->input('area_id');
 //                     }
 //                     $kurir->save();
@@ -329,7 +451,7 @@ public function updateUserPassword(Request $request, $id) {
 //             }
 //         }
 
-//         return response()->json(['message' => 'User updated successfully']);
+    //         return response()->json(['message' => 'User updated successfully']);
 //     } catch (Exception $e) {
 //         return response()->json(['message' => 'Error updating User'], 500);
 //     }
