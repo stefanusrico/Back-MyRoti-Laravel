@@ -9,7 +9,7 @@ class Lapak extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['nama_lapak', 'alamat_lapak', 'contact_lapak', 'image', 'area_id'];
+    protected $fillable = ['nama_lapak', 'alamat_lapak', 'contact_lapak', 'image', 'area_id', 'kurir_id'];
 
     protected $table = 'lapak';
 
@@ -21,6 +21,6 @@ class Lapak extends Model
 
     public function kurir()
     {
-        return $this->hasOne(Kurir::class, 'kurir_id');
+        return $this->belongsTo(Kurir::class, 'kurir_id');
     }
 }

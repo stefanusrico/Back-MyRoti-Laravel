@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Cache;
 
 class Kurir extends Model
 {
@@ -12,15 +11,8 @@ class Kurir extends Model
 
     protected $fillable = ['nama_kurir','area_id'];
 
-    protected $primaryKey = "id";
-
     
     protected $table = 'kurir';
-
-    public static function forgetCache()
-    {
-        Cache::forget('id');
-    }
 
     public function user()
     {
