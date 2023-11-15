@@ -16,7 +16,7 @@ class AlokasiController extends Controller
     {
         // Validasi data yang diterima dari permintaan
         $validator = Validator::make($request->all(), [
-            'koordinator_id' => 'required',
+            'lapak_id' => 'required',
             'kurir_id' => 'required',
             'roti_id' => 'required',
             'jumlah_roti_alokasi' => 'required',
@@ -28,7 +28,7 @@ class AlokasiController extends Controller
         }
 
         $alokasi = new Alokasi([
-            'koordinator_id' => $request->input('koordinator_id'),
+            'lapak_id' => $request->input('lapak_id'),
             'kurir_id' => $request->input('kurir_id'),
             'roti_id' => $request->input('roti_id'),
             'jumlah_roti_alokasi' => $request->input('jumlah_roti_alokasi'),
@@ -53,7 +53,7 @@ class AlokasiController extends Controller
         $dataAlokasi = $alokasi->map(function ($alokasi) {
             return [
                 'id' => $alokasi->id,
-                'nama_koordinator' => $alokasi->koordinator->nama_koordinator,
+                'nama_lapak' => $alokasi->lapak->nama_lapak,
                 'nama_kurir' => $alokasi->kurir->nama_kurir,
                 'roti_id' => $alokasi->roti->nama_roti,
                 'jumlah_roti' => $alokasi->jumlah_roti_alokasi,
@@ -62,6 +62,19 @@ class AlokasiController extends Controller
         });
 
         return response()->json($dataAlokasi, 200);
+    }
+
+    public function deleteAlokasi($id)
+    {
+        $alokasi = Alokasi::find($id);
+
+        if (!$alokasi) {
+            return response()->json(['message' => 'Data alokasi tidak ditemukan'], 404);
+        }
+
+        $alokasi->delete();
+
+        return response()->json(['message' => 'Data alokasi berhasil dihapus'], 200);
     }
 
     
