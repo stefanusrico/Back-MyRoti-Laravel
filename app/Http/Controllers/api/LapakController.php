@@ -33,7 +33,6 @@ class LapakController extends Controller
             'id_kurir' => $request->input('id_kurir'),
             'alamat' => $request->input('alamat'),
             'contact_lapak' => $request->input('contact_lapak'),
-            'image' => $request->input('image'),
         ]);
 
         if ($request->hasFile('image')) {
@@ -69,6 +68,27 @@ class LapakController extends Controller
         return response()->json($lapakData, 200);
     }
 
+    public function getLapakById($id)
+    {
+        try {
+            $lapak = Lapak::findOrFail($id);
+
+            $lapakData = [
+                'id_lapak' => $lapak->id,
+                'nama_lapak' => $lapak->nama_lapak,
+                'area' => $lapak->area->nama_area,
+                'kurir' => $lapak->kurir->nama_kurir,
+                'alamat_lapak' => $lapak->alamat,
+                'contact_lapak' => $lapak->contact_lapak,
+                'image' => asset('storage/lapak_images/' . $lapak->image),
+            ];
+
+            return response()->json($lapakData, 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Lapak tidak ditemukan'], 404);
+        }
+    }
+
     public function showData($id)
     {
         try {
@@ -89,21 +109,22 @@ class LapakController extends Controller
 
         // Validasi hanya bidang-bidang tertentu yang diizinkan diubah
         $validator = Validator::make($request->all(), [
-            // 'nama_lapak' => 'required',
-            // 'area' => 'required',
-            // 'alamat_lapak' => 'required',
-            // 'contact_lapak' => 'required',
-            'kurir_id' => 'required',
+            'id_area' => 'required|exists:area,id',
+            'id_kurir' => 'required|exists:kurir,id',
+            'alamat' => 'required',
+            'contact_lapak' => 'required',
         ]);
 
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()], 400);
         }
 
-        // $lapak->area = $request->input('area');
-        // $lapak->alamat_lapak = $request->input('alamat_lapak');
-        // $lapak->contact_lapak = $request->input('contact_lapak');
-        $lapak->kurir_id = $request->input('kurir_id');
+        // Update specific attributes
+        $lapak->id_kurir = $request->input('id_kurir');
+        $lapak->id_area = $request->input('id_area');
+        $lapak->alamat = $request->input('alamat');
+        $lapak->contact_lapak = $request->input('contact_lapak');
+
         $lapak->save();
 
         return response()->json(['message' => 'Data lapak berhasil diperbarui'], 200);

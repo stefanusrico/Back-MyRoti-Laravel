@@ -29,7 +29,6 @@ Route::post('/store-role', [RoleController::class, 'store']);
 
 Route::post('/lapak', 'App\Http\Controllers\Api\LapakController@addLapak');
 Route::get('/lapak', 'App\Http\Controllers\Api\LapakController@getLapak');
-Route::put('/lapak/{id}', 'App\Http\Controllers\Api\LapakController@updateLapak');
 Route::put('/update-lapak/{id}', 'App\Http\Controllers\Api\LapakController@updateLapak');
 Route::get('/lapak/{id}', 'App\Http\Controllers\Api\LapakController@showData');
 Route::delete('/lapak/{id}', 'App\Http\Controllers\Api\LapakController@deleteLapak');
