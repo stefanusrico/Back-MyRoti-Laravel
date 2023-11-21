@@ -4,6 +4,7 @@ use App\Http\Controllers\api\AdminController;
 use App\Http\Controllers\api\AreaController;
 use App\Http\Controllers\api\RotiController;
 use App\Http\Controllers\api\KurirController;
+use App\Http\Controllers\api\RoleController;
 use App\Http\Controllers\api\AlokasiController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\api\AuthController;
@@ -24,6 +25,7 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 Route::get('get-amount-user', 'App\Http\Controllers\api\AdminController@getAmountUser');
+Route::post('/store-role', [RoleController::class, 'store']);
 
 Route::post('/lapak', 'App\Http\Controllers\Api\LapakController@addLapak');
 Route::get('/lapak', 'App\Http\Controllers\Api\LapakController@getLapak');

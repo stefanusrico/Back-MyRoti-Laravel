@@ -19,10 +19,10 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
-        'username',
+        'email',
         'password',
         'password_unhashed',
-        'role',
+        'id_role',
     ];
     /**
      * The attributes that should be hidden for serialization.
@@ -51,23 +51,13 @@ class User extends Authenticatable
         $this->save();
     }
 
-    public function pemilik()
+    public function role()
     {
-        return $this->hasOne(Pemilik::class);
+        return $this->belongsTo(Role::class, 'id_role');
     }
 
     public function kurir()
     {
-        return $this->hasOne(Kurir::class);
-    }
-
-    public function koordinator()
-    {
-        return $this->hasOne(Koordinator::class);
-    }
-
-    public function keuangan()
-    {
-        return $this->hasOne(Keuangan::class);
+        return $this->hasOne(Kurir::class, 'id_user');
     }
 }

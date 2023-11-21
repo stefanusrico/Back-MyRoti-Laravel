@@ -9,7 +9,12 @@ class Transaksi extends Model
 {
     use HasFactory;
 
-    public function alokasi(){
-        return $this->belongsTo(Alokasi::class, 'alokasi_id');
+    protected $table = 'transaksi';
+
+    protected $fillable = ['id_alokasi', 'tanggal_transaksi', 'jumlah_roti_terjual', 'total_harga'];
+
+    public function alokasi()
+    {
+        return $this->belongsTo(Alokasi::class);
     }
 }

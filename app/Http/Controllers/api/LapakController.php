@@ -14,10 +14,10 @@ class LapakController extends Controller
         // Validasi data yang diterima dari permintaan
         $validator = Validator::make($request->all(), [
             'image' => 'required|image|mimes:jpeg,png,jpg,gif',
-            'nama_lapak' => 'required|unique:lapak',
-            'area_id' => 'required',
-            'kurir_id' => 'required',
-            'alamat_lapak' => 'required',
+            'nama_lapak' => 'required|unique:lapak,nama_lapak',
+            'id_area' => 'required|exists:area,id',
+            'id_kurir' => 'required|exists:kurir,id',
+            'alamat' => 'required',
             'contact_lapak' => 'required',
         ]);
 
@@ -29,9 +29,9 @@ class LapakController extends Controller
         // Simpan data lapak ke dalam basis data
         $lapak = new Lapak([
             'nama_lapak' => $request->input('nama_lapak'),
-            'area_id' => $request->input('area_id'),
-            'kurir_id' => $request->input('kurir_id'),
-            'alamat_lapak' => $request->input('alamat_lapak'),
+            'id_area' => $request->input('id_area'),
+            'id_kurir' => $request->input('id_kurir'),
+            'alamat' => $request->input('alamat'),
             'contact_lapak' => $request->input('contact_lapak'),
             'image' => $request->input('image'),
         ]);
@@ -60,28 +60,24 @@ class LapakController extends Controller
                 'nama_lapak' => $lapak->nama_lapak,
                 'area' => $lapak->area->nama_area,
                 'kurir' => $lapak->kurir->nama_kurir,
-                'alamat_lapak' => $lapak->alamat_lapak,
+                'alamat_lapak' => $lapak->alamat,
                 'contact_lapak' => $lapak->contact_lapak,
-                'image' => asset('storage/lapak_images/' . $lapak->image), // Mengembalikan URL gambar
+                'image' => asset('storage/lapak_images/' . $lapak->image),
             ];
         });
 
-        // Kembalikan data lapak dalam format JSON
-        // <console class="log">$lapakData</console>
         return response()->json($lapakData, 200);
     }
 
     public function showData($id)
     {
-        try{
+        try {
             $lapak = Lapak::findOrFail($id);
             return response()->json($lapak);
-        }
-        catch(\Exception $e){
+        } catch (\Exception $e) {
             return response()->json(['message' => 'lapak tidak ditemukan'], 404);
         }
     }
-
 
     public function updateLapak(Request $request, $id)
     {

@@ -8,15 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class Roti extends Model
 {
     use HasFactory;
-    
-    protected $table = 'roti'; // Nama tabel dalam database
 
-    protected $fillable = ['nama_roti', 'jenis_roti','tanggal_produksi', 'tanggal_kadaluarasa']; // Kolom-kolom yang bisa diisi
+    protected $table = 'roti';
 
+    protected $fillable = ['nama_roti', 'jenis_roti', 'tanggal_produksi', 'tanggal_kadaluarasa'];
 
     public function alokasi()
     {
-        return $this->hasMany(Alokasi::class, 'alokasi_id');
+        return $this->hasMany(Alokasi::class);
     }
 
     public $timestamps = true;

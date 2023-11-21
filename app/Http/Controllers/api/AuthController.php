@@ -21,49 +21,37 @@ class AuthController extends Controller
     {
         $request->validate([
             'name' => 'required',
-            'username' => 'required|unique:users',
+            'email' => 'required|unique:users,email',
             'password' => 'required',
-            'role' => 'required|in:Pemilik,Kurir,Koordinator,Keuangan,Admin',
+            'id_role' => 'required|in:1,2,3,4,5|numeric|exists:role,id',
+            'id_area' => ($request->input('id_role') === 1) ? 'required|exists:area,id' : '',
         ]);
 
         // Buat pengguna (user) baru
         $user = new User([
             'name' => $request->input('name'),
-            'username' => $request->input('username'),
+            'email' => $request->input('email'),
             'password' => Hash::make($request->input('password')),
             'password_unhashed' => ($request->input('password')),
-            'role' => $request->input('role'),
+            'id_role' => $request->input('id_role'),
         ]);
 
         $user->save();
 
         // Berdasarkan peran (role) pengguna, buat entri dalam tabel yang sesuai
-        if ($request->input('role') === 'Pemilik') {
-            $pemilik = new Pemilik();
-            // Isi data pemilik jika ada
-            $user->pemilik()->save($pemilik);
-        } elseif ($request->input('role') === 'Kurir') {
-            $areaId = $request->input('area_id');
-                
-                // Validasi apakah $areaId sesuai dengan entri yang ada di tabel area
-                if (!Area::where('id', $areaId)->exists()) {
-                    $user->delete();
-                    return response()->json(['message' => 'Invalid area_id'], 400);
-                }
+        if ($request->input('id_role') == 1) {
+            info('id_role is 1');
+
+            $areaId = $request->input('id_area');
+
+            if (!Area::where('id', $areaId)->exists()) {
+                $user->delete();
+                return response()->json(['message' => 'Invalid id_area'], 400);
+            }
 
             $kurir = new Kurir();
-            $kurir->nama_kurir = $user->name;
-            $kurir->area_id = $areaId;
+            $kurir->id_area = $areaId;
             $user->kurir()->save($kurir);
-        } elseif ($request->input('role') === 'Koordinator') {
-            $koordinator = new Koordinator();
-            $koordinator->nama_koordinator = $user->name;
-            // Isi data koordinator jika ada
-            $user->koordinator()->save($koordinator);
-        } elseif ($request->input('role') === 'Keuangan') {
-            $keuangan = new Keuangan();
-            $keuangan->nama_keuangan = $user->name;
-            $user->keuangan()->save($keuangan);
         }
 
         return response()->json(['message' => 'Registration successful'], 201);
