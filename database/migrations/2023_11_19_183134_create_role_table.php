@@ -8,16 +8,12 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
-     * 
      */
-
     public function up(): void
     {
-        Schema::create('keuangan', function (Blueprint $table) {
+        Schema::create('role', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->string('nama_keuangan');
+            $table->string('role_name');
             $table->timestamps();
         });
     }
@@ -27,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('keuangan');
+        Schema::dropIfExists('role');
     }
 };

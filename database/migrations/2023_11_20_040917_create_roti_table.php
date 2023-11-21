@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('product', function (Blueprint $table) {
+        Schema::create('roti', function (Blueprint $table) {
             $table->id();
-            $table->string('nama_product')->unique();
-            $table->string('image');
-            $table->text('deskripsi');
-            $table->integer('harga_product');
+            $table->string('nama_roti');
+            $table->string('jenis_roti');
+            $table->date('tanggal_produksi');
+            $table->date('tanggal_kadaluarsa');
             $table->timestamps();
         });
     }
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('product');
+        Schema::dropIfExists('roti');
     }
 };

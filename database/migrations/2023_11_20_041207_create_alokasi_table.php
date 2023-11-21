@@ -11,9 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('area', function (Blueprint $table) {
+        Schema::create('alokasi', function (Blueprint $table) {
             $table->id();
-            $table->string('nama_area');
+            $table->unsignedBigInteger('id_lapak');
+            $table->foreign('id_lapak')->references('id')->on('lapak');
+            $table->unsignedBigInteger('id_roti');
+            $table->foreign('id_roti')->references('id')->on('roti');
+            $table->smallInteger('jumlah_roti_alokasi');
             $table->timestamps();
         });
     }
@@ -23,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('area');
+        Schema::dropIfExists('alokasi');
     }
 };
