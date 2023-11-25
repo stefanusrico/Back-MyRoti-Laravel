@@ -15,7 +15,7 @@ return new class extends Migration {
             $table->string('nama_roti');
             $table->string('jenis_roti');
             $table->date('tanggal_produksi');
-            $table->date('tanggal_kadaluarsa');
+            $table->date('tanggal_kadaluarasa');
             $table->timestamps();
         });
     }
