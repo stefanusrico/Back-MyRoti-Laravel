@@ -15,7 +15,7 @@ class Roti extends Model
 
     public function alokasi()
     {
-        return $this->hasMany(Alokasi::class);
+        return $this->hasMany(Alokasi::class, 'alokasi_id');
     }
 
     public $timestamps = true;

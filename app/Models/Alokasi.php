@@ -9,7 +9,7 @@ class Alokasi extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['lapak_id', 'roti_id', 'jumlah_roti_alokasi', 'keterangan'];
+    protected $fillable = ['id_roti', 'id_lapak', 'jumlah_roti_alokasi', 'keterangan'];
 
     protected $table = 'alokasi';
 
@@ -17,12 +17,12 @@ class Alokasi extends Model
 
     public function lapak()
     {
-        return $this->belongsTo(Lapak::class, 'lapak_id');
+        return $this->belongsTo(Lapak::class, 'id_lapak');
     }
 
     public function roti()
     {
-        return $this->belongsTo(Roti::class, 'roti_id');
+        return $this->belongsTo(Roti::class, 'id_roti');
     }
 
     public function transaksi()

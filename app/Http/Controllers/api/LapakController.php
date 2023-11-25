@@ -97,7 +97,7 @@ class LapakController extends Controller
     public function getLapakByArea($id)
     {
         try{
-            $lapak = Lapak::where('area_id', $id)->get();
+            $lapak = Lapak::where('id_lapak', $id)->get();
             
             if ($lapak->isEmpty()) {
                 return response()->json(['message' => 'lapak kosong'], 404);

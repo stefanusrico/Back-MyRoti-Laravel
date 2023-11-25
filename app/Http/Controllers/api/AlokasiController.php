@@ -14,11 +14,12 @@ class AlokasiController extends Controller
    
     public function addAlokasi(Request $request)
     {
-        // Validasi data yang diterima dari permintaan
+        // Validasi data yang diterima dari permintaan  
         $validator = Validator::make($request->all(), [
-            'lapak_id' => 'required',
-            'roti_id' => 'required',
+            'id_roti' => 'required',
+            'id_lapak' => 'required',
             'jumlah_roti_alokasi' => 'required',
+            'keterangan' => 'required',
         ]);
 
         // Jika validasi gagal
@@ -27,9 +28,10 @@ class AlokasiController extends Controller
         }
 
         $alokasi = new Alokasi([
-            'lapak_id' => $request->input('lapak_id'),
-            'roti_id' => $request->input('roti_id'),
+            'id_roti' => $request->input('id_roti'),
+            'id_lapak' => $request->input('id_lapak'),
             'jumlah_roti_alokasi' => $request->input('jumlah_roti_alokasi'),
+            'keterangan' => $request->input('keterangan'),
         ]);
 
         
@@ -52,7 +54,7 @@ class AlokasiController extends Controller
             return [
                 'id' => $alokasi->id,
                 'lapak' => $alokasi->lapak->nama_lapak,
-                'kurir' => $alokasi->lapak->kurir->nama_kurir,
+                'kurir' => $alokasi->lapak->kurir->user->name,
                 'roti_id' => $alokasi->roti->nama_roti,
                 'jumlah_roti' => $alokasi->jumlah_roti_alokasi,
                 'keterangan' => $alokasi->keterangan,
@@ -69,7 +71,7 @@ class AlokasiController extends Controller
         try{
             $lapak_id = $id; // Ganti dengan nilai lapak_id yang sesuai
         
-            $alokasi = Alokasi::where('lapak_id', $lapak_id)->get();
+            $alokasi = Alokasi::where('id_lapak', $lapak_id)->get();
             if ($alokasi->isEmpty()) {
                 return response()->json(['message' => 'Alokasi kosong'], 404);
             }
@@ -79,7 +81,7 @@ class AlokasiController extends Controller
                 return [
                     'id' => $item->id,
                     'lapak' => $item->lapak->nama_lapak,
-                    'kurir' => $item->lapak->kurir->nama_kurir,
+                    'kurir' => $item->lapak->kurir->user->name,
                     'roti_id' => $item->roti->nama_roti,
                     'jumlah_roti' => $item->jumlah_roti_alokasi,
                     'keterangan' => $item->keterangan,
@@ -98,7 +100,7 @@ class AlokasiController extends Controller
         try{
             $lapak_id = $id; // Ganti dengan nilai lapak_id yang sesuai
         
-            $alokasi = Alokasi::where('lapak_id', $lapak_id)
+            $alokasi = Alokasi::where('id_lapak', $lapak_id)
                                 ->where('keterangan', 'In Progress')
                                 ->get();
             if ($alokasi->isEmpty()) {
@@ -110,8 +112,8 @@ class AlokasiController extends Controller
                 return [
                     'id' => $item->id,
                     'lapak' => $item->lapak->nama_lapak,
-                    'kurir' => $item->lapak->kurir->nama_kurir,
-                    'roti_id' => $item->roti->nama_roti,
+                    'kurir' => $item->lapak->kurir->user->name,
+                    'id_roti' => $item->roti->nama_roti,
                     'jumlah_roti' => $item->jumlah_roti_alokasi,
                     'keterangan' => $item->keterangan,
                 ];

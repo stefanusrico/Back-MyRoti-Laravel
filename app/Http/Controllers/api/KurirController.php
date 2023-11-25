@@ -39,21 +39,19 @@ class KurirController extends Controller
         $kurirData = $kurir->map(function ($kurir) {
             return [
                 'id' => $kurir->id,
-                'user_id' => $kurir->user_id,
-                'nama_kurir' => $kurir->nama_kurir,
+                'user_id' => $kurir->id_user,
+                'nama_kurir' => $kurir->user->name,
                 'area' => $kurir->area->nama_area,
 
             ];
         });
 
-        // Kembalikan data lapak dalam format JSON
-        // <console class="log">$lapakData</console>
+     
         return response()->json($kurirData, 200);
     }
 
     public function showData($id)
     {
-<<<<<<< Updated upstream
         try{
             $kurir = Kurir::where('id', $id)->get();
             
@@ -64,8 +62,8 @@ class KurirController extends Controller
             $kurirData = $kurir->map(function ($kurir) {
                 return [
                     'id' => $kurir->id,
-                    'user_id' => $kurir->user_id,
-                    'nama_kurir' => $kurir->nama_kurir,
+                    'user_id' => $kurir->id_user,
+                    'nama_kurir' => $kurir->user->name,
                     'area' => $kurir->area->nama_area,
                     
                 ];
@@ -74,12 +72,6 @@ class KurirController extends Controller
             return response()->json($kurirData, 200);
         }
         catch(\Exception $e){
-=======
-        try {
-            $kurir = Kurir::findOrFail($id);
-            return response()->json($kurir);
-        } catch (\Exception $e) {
->>>>>>> Stashed changes
             return response()->json(['message' => 'kurir tidak ditemukan'], 404);
         }
     }
