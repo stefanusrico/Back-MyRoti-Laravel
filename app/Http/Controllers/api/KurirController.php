@@ -53,33 +53,10 @@ class KurirController extends Controller
 
     public function showData($id)
     {
-<<<<<<< Updated upstream
-        try{
-            $kurir = Kurir::where('id', $id)->get();
-            
-            if ($kurir->isEmpty()) {
-                return response()->json(['message' => 'kurir tidak ada'], 404);
-            }
-
-            $kurirData = $kurir->map(function ($kurir) {
-                return [
-                    'id' => $kurir->id,
-                    'user_id' => $kurir->user_id,
-                    'nama_kurir' => $kurir->nama_kurir,
-                    'area' => $kurir->area->nama_area,
-                    
-                ];
-            });
-    
-            return response()->json($kurirData, 200);
-        }
-        catch(\Exception $e){
-=======
         try {
             $kurir = Kurir::findOrFail($id);
             return response()->json($kurir);
         } catch (\Exception $e) {
->>>>>>> Stashed changes
             return response()->json(['message' => 'kurir tidak ditemukan'], 404);
         }
     }
