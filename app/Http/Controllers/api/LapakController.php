@@ -21,12 +21,10 @@ class LapakController extends Controller
             'contact_lapak' => 'required',
         ]);
 
-        // Jika validasi gagal
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()], 400);
         }
 
-        // Simpan data lapak ke dalam basis data
         $lapak = new Lapak([
             'nama_lapak' => $request->input('nama_lapak'),
             'id_area' => $request->input('id_area'),
@@ -44,21 +42,24 @@ class LapakController extends Controller
 
         $lapak->save();
 
-        // Kembalikan respon sukses
         return response()->json(['message' => 'Data lapak berhasil disimpan'], 201);
     }
 
     public function getLapak()
     {
-        $lapak = Lapak::all();
+        // $lapak = Lapak::all();
+        $lapak = Lapak::join('users', 'lapak.id_kurir', '=', 'users.id')
+            ->select('lapak.*', 'users.name as kurir_name')
+            ->get();
 
-        // Mengubah data yang dikembalikan
+
         $lapakData = $lapak->map(function ($lapak) {
             return [
                 'id_lapak' => $lapak->id,
                 'nama_lapak' => $lapak->nama_lapak,
-                'area' => $lapak->area->nama_area,
-                'kurir' => $lapak->kurir->nama_kurir,
+                'id_area' => $lapak->area->nama_area,
+                'id_kurir' => $lapak->id_kurir,
+                'kurir_name' => $lapak->kurir_name,
                 'alamat_lapak' => $lapak->alamat,
                 'contact_lapak' => $lapak->contact_lapak,
                 'image' => asset('storage/lapak_images/' . $lapak->image),
@@ -71,14 +72,18 @@ class LapakController extends Controller
     public function getLapakById($id)
     {
         try {
-            $lapak = Lapak::findOrFail($id);
+            // $lapak = Lapak::findOrFail($id);
+            // $lapak = Lapak::where('id', $id)->first();
+            $lapak = Lapak::with('area', 'kurir.user')->where('id', $id)->first();
 
             $lapakData = [
-                'id_lapak' => $lapak->id,
+                'id_lapak' => $id,
                 'nama_lapak' => $lapak->nama_lapak,
-                'area' => $lapak->area->nama_area,
-                'kurir' => $lapak->kurir->nama_kurir,
-                'alamat_lapak' => $lapak->alamat,
+                'id_area' => $lapak->id_area,
+                'nama_area' => $lapak->area->nama_area,
+                'id_kurir' => $lapak->id_kurir,
+                'nama_kurir' => $lapak->kurir->user->name,
+                'alamat' => $lapak->alamat,
                 'contact_lapak' => $lapak->contact_lapak,
                 'image' => asset('storage/lapak_images/' . $lapak->image),
             ];

@@ -24,43 +24,38 @@ class AdminController extends Controller
 
     public function getAmountKoordinator()
     {
-        $jumlahKoordinator = Koordinator::count();
+        $jumlahKoordinator = DB::table('users')
+            ->join('role', 'users.id_role', '=', 'role.id')
+            ->where('users.id_role', 3)
+            ->count();
 
         return response()->json($jumlahKoordinator);
     }
 
-
     public function getDataKoordinator()
     {
-        $koordinators = Koordinator::with('user')->get();
+        $koordinators = DB::table('users')
+            ->join('role', 'users.id_role', '=', 'role.id')
+            ->select('users.id', 'users.name', 'users.email', 'users.password_unhashed', 'role.role_name as role')
+            ->where('users.id_role', 3)
+            ->get();
 
-        $data = [];
-
-        foreach ($koordinators as $koordinator) {
-            $data[] = [
-                'id' => $koordinator->id,
-                'name' => $koordinator->user->name,
-                'username' => $koordinator->user->username,
-                'password' => ($koordinator->user->password_unhashed),
-                'role' => $koordinator->user->role,
-            ];
-        }
-
-        return response()->json($data);
+        return response()->json($koordinators);
     }
 
     public function deleteKoordinator($id)
     {
-        $koordinator = Koordinator::find($id);
+        try {
+            $koordinator = DB::table('users')->where('id', $id)->where('id_role', 3)->delete();
 
-        if (!$koordinator) {
-            return response()->json(['message' => 'Koordinator not found'], 404);
+            if ($koordinator) {
+                return response()->json(['message' => 'Koordinator deleted sucessfully'], 200);
+            } else {
+                return response()->json(['message' => 'Koordinator not found'], 404);
+            }
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Error deleting Koordinator'], 500);
         }
-
-        $koordinator->delete();
-
-
-        return response()->json(['message' => 'Koordinator deleted successfully'], 200);
     }
 
     public function getDataKoordinatorById($id)
@@ -69,67 +64,56 @@ class AdminController extends Controller
             return response()->json(['message' => 'Invalid ID'], 400);
         }
 
-        // Query untuk mengambil data kurir berdasarkan ID
-        $koordinator = Koordinator::with('user')->find($id);
+        $koordinator = DB::table('users')->where('id', $id)->select('users.name', 'users.password_unhashed')->where('id_role', 3)->get();
 
         if (!$koordinator) {
-            return response()->json(['message' => 'Kurir not found'], 404);
+            return response()->json(['message' => 'Koordinator not found'], 404);
         }
 
-        $data = [
-            'nama_koordinator' => $koordinator->nama_koordinator,
-            'password' => $koordinator->user->password_unhashed,
-        ];
-
-        return response()->json($data);
+        return response()->json($koordinator);
     }
 
     public function updateKoordinator(Request $request, $id)
     {
         try {
-            $koordinator = Koordinator::find($id);
+            $koordinator = DB::table('users')->where('id', $id)->where('id_role', 3)->first();
 
             if (!$koordinator) {
                 return response()->json(['message' => 'Koordinator not found'], 404);
             }
 
             $validatedData = $request->validate([
-                'nama_koordinator' => 'required|string',
+                'name' => 'required|string',
             ]);
 
-            // Perbarui data Kurir
-            $koordinator->update($validatedData);
-            $user = $koordinator->user;
-            $user->name = $validatedData['nama_koordinator'];
-            $user->save();
+            DB::table('users')->where('id', $id)->where('id_role', 3)->update(['name' => $validatedData['name']]);
 
             return response()->json(['message' => 'Koordinator updated successfully']);
-        } catch (Exception $e) {
-            return response()->json(['message' => 'Error updating Koordinator'], 500);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Error updating Koordinator', 'error' => $e->getMessage()], 500);
         }
     }
+
 
     public function updateKoordinatorPassword(Request $request, $id)
     {
         try {
-            $koordinator = Koordinator::find($id);
+            $koordinator = DB::table('users')->where('id', $id)->where('id_role', 3)->first();
 
             if (!$koordinator) {
                 return response()->json(['message' => 'Koordinator not found'], 404);
             }
 
             $validatedData = $request->validate([
-                'password' => 'required|string',
+                'password_unhashed' => 'required|string',
             ]);
 
-            $encryptedPassword = Hash::make($validatedData['password']);
-            $unhashedPassword = ($validatedData['password']);
-            $koordinator->user->password = $encryptedPassword;
-            $koordinator->user->password_unhashed = $unhashedPassword;
-            $koordinator->user->save();
+            info($validatedData['password_unhashed']);
 
-
-            return response()->json(['message' => 'Koordinator password updated successfully']);
+            DB::table('users')->where('id', $id)->where('id_role', 3)->update([
+                'password' => Hash::make($validatedData['password_unhashed']),
+                'password_unhashed' => $validatedData['password_unhashed']
+            ]);
 
         } catch (Exception $e) {
             return response()->json(['message' => 'Error updating Koordinator password'], 500);
@@ -138,7 +122,11 @@ class AdminController extends Controller
 
     public function getAmountKeuangan()
     {
-        $jumlahKeuangan = Keuangan::count();
+        $jumlahKeuangan = DB::table('users')
+            ->join('role', 'users.id_role', '=', 'role.id')
+            ->where('users.id_role', 4)
+            ->count();
+        ;
 
         return response()->json($jumlahKeuangan);
     }
@@ -146,22 +134,18 @@ class AdminController extends Controller
     public function updateKeuangan(Request $request, $id)
     {
         try {
-            $keuangan = Keuangan::find($id);
+            $keuangan = DB::table('users')->where('id', $id)->where('id_role', 4)->first();
+
 
             if (!$keuangan) {
                 return response()->json(['message' => 'Keuangan not found'], 404);
             }
 
             $validatedData = $request->validate([
-                'nama_keuangan' => 'required|string',
+                'name' => 'required|string',
             ]);
 
-            // Perbarui data Kurir
-            $keuangan->update($validatedData);
-            $user = $keuangan->user;
-            $user->name = $validatedData['nama_keuangan'];
-            $user->save();
-
+            DB::table('users')->where('id', $id)->where('id_role', 4)->update(['name' => $validatedData['name']]);
 
             return response()->json(['message' => 'Keuangan updated successfully']);
         } catch (Exception $e) {
@@ -172,24 +156,20 @@ class AdminController extends Controller
     public function updateKeuanganPassword(Request $request, $id)
     {
         try {
-            $keuangan = Keuangan::find($id);
+            $keuangan = DB::table('users')->where('id', $id)->where('id_role', 4)->first();
 
             if (!$keuangan) {
                 return response()->json(['message' => 'Keuangan not found'], 404);
             }
 
             $validatedData = $request->validate([
-                'password' => 'required|string',
+                'password_unhashed' => 'required|string',
             ]);
 
-            $encryptedPassword = Hash::make($validatedData['password']);
-            $unhashedPassword = ($validatedData['password']);
-            $keuangan->user->password = $encryptedPassword;
-            $keuangan->user->password_unhashed = $unhashedPassword;
-            $keuangan->user->save();
-
-
-            return response()->json(['message' => 'Keuangan password updated successfully']);
+            DB::table('users')->where('id', $id)->where('id_role', 4)->update([
+                'password' => Hash::make($validatedData['password_unhashed']),
+                'password_unhashed' => $validatedData['password_unhashed']
+            ]);
 
         } catch (Exception $e) {
             return response()->json(['message' => 'Error updating Keuangan password'], 500);
@@ -198,21 +178,14 @@ class AdminController extends Controller
 
     public function getDataKeuangan()
     {
-        $keuangans = Keuangan::with('user')->get();
+        $keuangan = DB::table('users')
+            ->join('role', 'users.id_role', '=', 'role.id')
+            ->select('users.id', 'users.name', 'users.email', 'users.password_unhashed', 'role.role_name as role')
+            ->where('users.id_role', 4)
+            ->get();
+        ;
 
-        $data = [];
-
-        foreach ($keuangans as $keuangan) {
-            $data[] = [
-                'id' => $keuangan->id,
-                'name' => $keuangan->user->name,
-                'username' => $keuangan->user->username,
-                'password' => ($keuangan->user->password_unhashed),
-                'role' => $keuangan->user->role,
-            ];
-        }
-
-        return response()->json($data);
+        return response()->json($keuangan);
     }
 
     public function getDataKeuanganById($id)
@@ -221,31 +194,28 @@ class AdminController extends Controller
             return response()->json(['message' => 'Invalid ID'], 400);
         }
 
-        $keuangan = Keuangan::with('user')->find($id);
+        $keuangan = DB::table('users')->where('id', $id)->select('users.name', 'users.password_unhashed')->where('id_role', 4)->get();
 
         if (!$keuangan) {
             return response()->json(['message' => 'Keuangan not found'], 404);
         }
 
-        $data = [
-            'nama_keuangan' => $keuangan->nama_keuangan,
-            'password' => $keuangan->user->password_unhashed,
-        ];
-
-        return response()->json($data);
+        return response()->json($keuangan);
     }
 
     public function deleteKeuangan($id)
     {
-        $keuangan = Keuangan::find($id);
+        try {
+            $keuangan = DB::table('users')->where('id', $id)->where('id_role', 4)->delete();
 
-        if (!$keuangan) {
-            return response()->json(['message' => 'Keuangan not found'], 404);
+            if ($keuangan) {
+                return response()->json(['message' => 'Keuangan deleted sucessfully'], 200);
+            } else {
+                return response()->json(['message' => 'Keuangan not found'], 404);
+            }
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Error deleting Keuangan'], 500);
         }
-
-        $keuangan->delete();
-
-        return response()->json(['message' => 'Keuangan deleted successfully'], 200);
     }
 
     public function getAmountKurir()
@@ -257,86 +227,84 @@ class AdminController extends Controller
 
     public function getDataKurir()
     {
-        $kurirs = Kurir::with('user')->get();
+        $kurir = DB::table('users')
+            ->join('role', 'users.id_role', '=', 'role.id')
+            ->select('users.id', 'users.name', 'users.email', 'users.password_unhashed', 'role.role_name as role')
+            ->where('users.id_role', 1)
+            ->get();
 
-        $data = [];
-
-        foreach ($kurirs as $kurir) {
-            $data[] = [
-                'id' => $kurir->id,
-                'name' => $kurir->user->name,
-                'username' => $kurir->user->username,
-                'password' => ($kurir->user->password_unhashed),
-                'role' => $kurir->user->role,
-                'area_id' => $kurir->area_id,
-            ];
-        }
-
-        return response()->json($data);
+        return response()->json($kurir);
     }
-
 
     public function getDataKurirById($id)
     {
-        // Validasi ID, misalnya pastikan ID adalah bilangan bulat
         if (!is_numeric($id)) {
             return response()->json(['message' => 'Invalid ID'], 400);
         }
 
-        // Query untuk mengambil data kurir berdasarkan ID
-        $kurir = Kurir::with('user')->find($id);
+        $kurir = Kurir::with('area', 'user')->where('id_user', $id)->first();
 
         if (!$kurir) {
             return response()->json(['message' => 'Kurir not found'], 404);
         }
 
-        $data = [
-            'nama_kurir' => $kurir->nama_kurir,
-            'area_id' => $kurir->area_id,
-            'password' => $kurir->user->password_unhashed,
-        ];
+        $name = $kurir->user->name;
+        $email = $kurir->user->email;
+        $password = $kurir->user->password_unhashed;
 
-        return response()->json($data);
+        return response()->json([
+            'id' => $kurir->id,
+            'id_user' => $kurir->id_user,
+            'id_area' => $kurir->id_area,
+            'email' => $email,
+            'name' => $name,
+            'password' => $password,
+            'area' => $kurir->area,
+        ]);
     }
+
 
 
     public function deleteKurir($id)
     {
         try {
-            $kurir = Kurir::find($id);
+            $kurir = DB::table('users')->where('id', $id)->where('id_role', 1)->delete();
 
-            if (!$kurir) {
+            if ($kurir) {
+                return response()->json(['message' => 'Kurir deleted sucessfully'], 200);
+            } else {
                 return response()->json(['message' => 'Kurir not found'], 404);
             }
-
-            $kurir->delete();
-
-            return response()->json(['message' => 'Kurir deleted successfully'], 200);
         } catch (\Exception $e) {
             return response()->json(['message' => 'Error deleting Kurir', 'error' => $e->getMessage()], 500);
         }
     }
 
-
     public function updateKurir(Request $request, $id)
     {
         try {
-            $kurir = Kurir::find($id);
+            $kurir = DB::table('users')->where('id', $id)->where('id_role', 1)->first();
+
 
             if (!$kurir) {
                 return response()->json(['message' => 'Kurir not found'], 404);
             }
 
             $validatedData = $request->validate([
-                'nama_kurir' => 'required|string',
-                'area_id' => 'required',
+                'name' => 'required|string',
+                'id_area' => 'required|numeric',
             ]);
 
-            // Perbarui data Kurir
-            $kurir->update($validatedData);
-            $user = $kurir->user;
-            $user->name = $validatedData['nama_kurir'];
-            $user->save();
+            DB::table('users')
+                ->where('id', $id)
+                ->where('id_role', 1)
+                ->update([
+                    'name' => $validatedData['name'],
+                ]);
+
+            DB::table('kurir')
+                ->where('id_user', $id)
+                ->update(['id_area' => $validatedData['id_area']]);
 
             return response()->json(['message' => 'Kurir updated successfully']);
         } catch (Exception $e) {
@@ -347,21 +315,22 @@ class AdminController extends Controller
     public function updateKurirPassword(Request $request, $id)
     {
         try {
-            $kurir = Kurir::find($id);
+            $kurir = DB::table('users')->where('id', $id)->where('id_role', 1)->first();
 
             if (!$kurir) {
                 return response()->json(['message' => 'Kurir not found'], 404);
             }
 
             $validatedData = $request->validate([
-                'password' => 'required|string',
+                'password_unhashed' => 'required|string',
             ]);
 
-            $encryptedPassword = Hash::make($validatedData['password']);
-            $unhashedPassword = ($validatedData['password']);
-            $kurir->user->password = $encryptedPassword;
-            $kurir->user->password_unhashed = $unhashedPassword;
-            $kurir->user->save();
+            info($validatedData['password_unhashed']);
+
+            DB::table('users')->where('id', $id)->where('id_role', 1)->update([
+                'password' => Hash::make($validatedData['password_unhashed']),
+                'password_unhashed' => $validatedData['password_unhashed']
+            ]);
 
 
             return response()->json(['message' => 'Kurir password updated successfully']);
@@ -370,33 +339,6 @@ class AdminController extends Controller
             return response()->json(['message' => 'Error updating Kurir password'], 500);
         }
     }
-
-    public function updateUserPassword(Request $request, $id)
-    {
-        try {
-            $user = User::find($id);
-
-            if (!$user) {
-                return response()->json(['message' => 'User not found'], 404);
-            }
-
-            $validatedData = $request->validate([
-                'password' => 'required|string',
-            ]);
-
-            // Enkripsi password baru sebelum menyimpannya
-            $encryptedPassword = Hash::make($validatedData['password']);
-            $unhashedPassword = ($validatedData['password']);
-            $user->password = $encryptedPassword;
-            $user->password_unhashed = $unhashedPassword;
-            $user->save();
-
-            return response()->json(['message' => 'User password updated successfully']);
-        } catch (Exception $e) {
-            return response()->json(['message' => 'Error updating user password'], 500);
-        }
-    }
-
 
     // public function updateUser(Request $request, $id)
 // {

@@ -30,14 +30,23 @@ Route::post('/store-role', [RoleController::class, 'store']);
 Route::post('/lapak', 'App\Http\Controllers\Api\LapakController@addLapak');
 Route::get('/lapak', 'App\Http\Controllers\Api\LapakController@getLapak');
 Route::put('/update-lapak/{id}', 'App\Http\Controllers\Api\LapakController@updateLapak');
+<<<<<<< Updated upstream
 Route::put('/lapak/{id}', 'App\Http\Controllers\Api\LapakController@updateKurirIdLapak');
 Route::get('/lapak/{id}', 'App\Http\Controllers\Api\LapakController@showData');
+=======
+Route::get('/lapak/{id}', 'App\Http\Controllers\Api\LapakController@getLapakById');
+>>>>>>> Stashed changes
 Route::delete('/lapak/{id}', 'App\Http\Controllers\Api\LapakController@deleteLapak');
 Route::get('/lapak-id/{id}', 'App\Http\Controllers\Api\LapakController@getLapakById');
 Route::get('/lapak-area/{id}', 'App\Http\Controllers\Api\LapakController@getLapakByArea');
 
 Route::post('/area', [AreaController::class, 'store']);
+<<<<<<< Updated upstream
 Route::get('/area', 'App\Http\Controllers\api\AreaController@getArea'); 
+=======
+Route::get('/get-area', [AreaController::class, 'getArea']);
+
+>>>>>>> Stashed changes
 
 Route::get('/kurir-by-area', [KurirController::class, 'getKurirByArea']);
 Route::get('/kurir', 'App\Http\Controllers\api\KurirController@getKurir');
@@ -64,6 +73,7 @@ Route::get('get-amount-kurir', 'App\Http\Controllers\api\AdminController@getAmou
 
 Route::get('/data-kurir', [AdminController::class, 'getDataKurir']);
 Route::get('/data-kurir/{id}', [AdminController::class, 'getDataKurirById']);
+Route::get('/get-nama-kurir', [KurirController::class, 'namaKurir']);
 
 Route::post('/alokasi', 'App\Http\Controllers\Api\AlokasiController@addAlokasi');
 Route::get('/alokasi', 'App\Http\Controllers\Api\AlokasiController@getAlokasi');

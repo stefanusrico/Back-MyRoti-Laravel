@@ -17,4 +17,9 @@ class Area extends Model
     {
         return $this->hasMany(Lapak::class);
     }
+
+    public function kurir()
+    {
+        return $this->hasMany(Kurir::class, 'id_area');
+    }
 }

@@ -5,9 +5,16 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use App\Models\Kurir;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class KurirController extends Controller
 {
+    public function namaKurir(Request $request)
+    {
+        $kurir = DB::table('users')->select(['id', 'name'])->where('id', 1)->first();
+        return response()->json($kurir);
+    }
+
     public function getKurirByArea(Request $request)
     {
         // Validasi request, misalnya pastikan request memiliki parameter 'lapak_id'
@@ -35,7 +42,7 @@ class KurirController extends Controller
                 'user_id' => $kurir->user_id,
                 'nama_kurir' => $kurir->nama_kurir,
                 'area' => $kurir->area->nama_area,
-                
+
             ];
         });
 
@@ -46,6 +53,7 @@ class KurirController extends Controller
 
     public function showData($id)
     {
+<<<<<<< Updated upstream
         try{
             $kurir = Kurir::where('id', $id)->get();
             
@@ -66,6 +74,12 @@ class KurirController extends Controller
             return response()->json($kurirData, 200);
         }
         catch(\Exception $e){
+=======
+        try {
+            $kurir = Kurir::findOrFail($id);
+            return response()->json($kurir);
+        } catch (\Exception $e) {
+>>>>>>> Stashed changes
             return response()->json(['message' => 'kurir tidak ditemukan'], 404);
         }
     }

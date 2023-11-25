@@ -17,7 +17,7 @@ return new class extends Migration {
             $table->string('password');
             $table->string('password_unhashed');
             $table->unsignedBigInteger('id_role');
-            $table->foreign('id_role')->references('id')->on('role');
+            $table->foreign('id_role')->references('id')->on('role')->onDelete('cascade');
             $table->timestamps();
         });
     }

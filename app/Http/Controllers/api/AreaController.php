@@ -5,9 +5,15 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Area;
+use Illuminate\Support\Facades\DB;
 
 class AreaController extends Controller
 {
+    public function getArea(Request $request)
+    {
+        $area = DB::table('area')->select('id', 'nama_area')->get();
+        return response()->json($area);
+    }
     public function store(Request $request)
     {
         $request->validate([
