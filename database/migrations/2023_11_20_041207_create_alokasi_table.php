@@ -18,6 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('id_roti');
             $table->foreign('id_roti')->references('id')->on('roti');
             $table->smallInteger('jumlah_roti_alokasi');
+            $table->string('keterangan');
             $table->timestamps();
         });
     }

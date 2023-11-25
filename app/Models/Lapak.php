@@ -9,7 +9,7 @@ class Lapak extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['nama_lapak', 'alamat', 'contact_lapak', 'image', 'id_area', 'id_kurir'];
+    protected $fillable = ['nama_lapak', 'alamat_lapak', 'contact_lapak', 'image', 'area_id', 'kurir_id'];
 
     protected $table = 'lapak';
 

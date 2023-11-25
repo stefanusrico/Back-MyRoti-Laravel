@@ -68,6 +68,57 @@ class RotiController extends Controller
         }
     }
 
+    public function rotiData($idLapak)
+    {
+        try {
+            $lapak_id = $idLapak; // Ganti dengan nilai lapak_id yang sesuai
+        
+            $rotiNotInAlokasi = DB::table('roti')
+                ->where(function ($query) use ($lapak_id) {
+                    $query->whereNotExists(function ($subquery) use ($lapak_id) {
+                        $subquery->select(DB::raw(1))
+                            ->from('alokasi')
+                            ->whereColumn('roti.id', 'alokasi.roti_id')
+                            ->where('alokasi.lapak_id', '=', $lapak_id);
+                    })
+                    ->orWhere(function ($subquery) use ($lapak_id) {
+                        $subquery->whereExists(function ($innerSubquery) use ($lapak_id) {
+                            $innerSubquery->select(DB::raw(1))
+                                ->from('alokasi')
+                                ->whereColumn('roti.id', 'alokasi.roti_id')
+                                ->where('alokasi.lapak_id', '=', $lapak_id)
+                                ->where('alokasi.keterangan', '=', 'Done!');
+                        });
+                    })
+                    ->orWhere(function ($subquery) use ($lapak_id) {
+                        $subquery->whereExists(function ($innerSubquery) use ($lapak_id) {
+                            $innerSubquery->select(DB::raw(1))
+                                ->from('alokasi')
+                                ->whereColumn('roti.id', 'alokasi.roti_id')
+                                ->where('alokasi.lapak_id', '=', $lapak_id)
+                                ->where('alokasi.keterangan', '<>', 'Done');
+                        });
+                    });
+                })
+                ->whereNotExists(function ($outerSubquery) use ($lapak_id) {
+                    $outerSubquery->select(DB::raw(1))
+                        ->from('alokasi')
+                        ->whereColumn('roti.id', 'alokasi.roti_id')
+                        ->where('alokasi.lapak_id', '=', $lapak_id)
+                        ->where('alokasi.keterangan', '=', 'In Progress');
+                })
+                ->select('roti.*')
+                ->get();
+        
+            // Lanjutkan dengan pemrosesan hasil query atau pengembalian data
+            return $rotiNotInAlokasi;
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Terjadi kesalahan dalam menjalankan query.'], 500);
+        }
+         
+    }
+
+
     public function updateRoti(Request $request, $id)
     {
         $roti = Roti::find($id);

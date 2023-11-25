@@ -89,6 +89,24 @@ class LapakController extends Controller
         }
     }
 
+    public function getLapakByArea($id)
+    {
+        try{
+            $lapak = Lapak::where('area_id', $id)->get();
+            
+            if ($lapak->isEmpty()) {
+                return response()->json(['message' => 'lapak kosong'], 404);
+            }
+
+            
+    
+            return response()->json($lapak, 200);
+        }
+        catch(\Exception $e){
+            return response()->json(['message' => 'lapak tidak ditemukan'], 404);
+        }
+    }
+
     public function showData($id)
     {
         try {
@@ -125,6 +143,30 @@ class LapakController extends Controller
         $lapak->alamat = $request->input('alamat');
         $lapak->contact_lapak = $request->input('contact_lapak');
 
+        $lapak->save();
+
+        return response()->json(['message' => 'Data lapak berhasil diperbarui'], 200);
+    }
+
+    public function updateKurirIdLapak(Request $request, $id)
+    {
+        $lapak = Lapak::find($id);
+
+        if (!$lapak) {
+            return response()->json(['message' => 'Data lapak tidak ditemukan'], 404);
+        }
+
+        // Validasi hanya bidang-bidang tertentu yang diizinkan diubah
+        $validator = Validator::make($request->all(), [
+            
+            'kurir_id' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 400);
+        }
+
+        $lapak->kurir_id = $request->input('kurir_id');
         $lapak->save();
 
         return response()->json(['message' => 'Data lapak berhasil diperbarui'], 200);

@@ -16,12 +16,12 @@ class Kurir extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'id_user');
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function area()
     {
-        return $this->belongsTo(Area::class, 'id_area');
+        return $this->belongsTo(Area::class, 'area_id');
     }
 
 

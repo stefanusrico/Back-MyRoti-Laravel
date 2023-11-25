@@ -20,4 +20,11 @@ class AreaController extends Controller
 
         return response()->json(['message' => 'Data Area berhasil disimpan'], 201);
     }
+
+    public function getArea()
+    {
+        $area = Area::all();
+
+        return response()->json($area, 200);
+    }
 }

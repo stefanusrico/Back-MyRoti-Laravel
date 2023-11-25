@@ -30,11 +30,14 @@ Route::post('/store-role', [RoleController::class, 'store']);
 Route::post('/lapak', 'App\Http\Controllers\Api\LapakController@addLapak');
 Route::get('/lapak', 'App\Http\Controllers\Api\LapakController@getLapak');
 Route::put('/update-lapak/{id}', 'App\Http\Controllers\Api\LapakController@updateLapak');
+Route::put('/lapak/{id}', 'App\Http\Controllers\Api\LapakController@updateKurirIdLapak');
 Route::get('/lapak/{id}', 'App\Http\Controllers\Api\LapakController@showData');
 Route::delete('/lapak/{id}', 'App\Http\Controllers\Api\LapakController@deleteLapak');
+Route::get('/lapak-id/{id}', 'App\Http\Controllers\Api\LapakController@getLapakById');
+Route::get('/lapak-area/{id}', 'App\Http\Controllers\Api\LapakController@getLapakByArea');
 
 Route::post('/area', [AreaController::class, 'store']);
-
+Route::get('/area', 'App\Http\Controllers\api\AreaController@getArea'); 
 
 Route::get('/kurir-by-area', [KurirController::class, 'getKurirByArea']);
 Route::get('/kurir', 'App\Http\Controllers\api\KurirController@getKurir');
@@ -64,7 +67,13 @@ Route::get('/data-kurir/{id}', [AdminController::class, 'getDataKurirById']);
 
 Route::post('/alokasi', 'App\Http\Controllers\Api\AlokasiController@addAlokasi');
 Route::get('/alokasi', 'App\Http\Controllers\Api\AlokasiController@getAlokasi');
+Route::get('/alokasi/{id}', 'App\Http\Controllers\Api\AlokasiController@getAlokasiByLapak');
+Route::get('/alokasi-keterangan/{id}', 'App\Http\Controllers\Api\AlokasiController@getAlokasiByKeterangan');
+Route::put('/alokasi/{id}', 'App\Http\Controllers\Api\AlokasiController@updateKeteranganAlokasi');
+Route::delete('/alokasi/{id}', 'App\Http\Controllers\Api\AlokasiController@deleteAlokasi');
 
 Route::post('/roti', 'App\Http\Controllers\Api\RotiController@addRoti');
 Route::get('/roti', 'App\Http\Controllers\Api\RotiController@getRoti');
+Route::get('/roti-dd/{id}', 'App\Http\Controllers\Api\RotiController@rotiData');
+Route::get('/roti/{id}', 'App\Http\Controllers\Api\RotiController@showData');
 //test
