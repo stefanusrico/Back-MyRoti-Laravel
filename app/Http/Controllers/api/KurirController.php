@@ -46,15 +46,15 @@ class KurirController extends Controller
             ];
         });
 
-     
+
         return response()->json($kurirData, 200);
     }
 
     public function showData($id)
     {
-        try{
+        try {
             $kurir = Kurir::where('id', $id)->get();
-            
+
             if ($kurir->isEmpty()) {
                 return response()->json(['message' => 'kurir tidak ada'], 404);
             }
@@ -65,14 +65,53 @@ class KurirController extends Controller
                     'user_id' => $kurir->id_user,
                     'nama_kurir' => $kurir->user->name,
                     'area' => $kurir->area->nama_area,
-                    
+
                 ];
             });
-    
+
             return response()->json($kurirData, 200);
-        }
-        catch(\Exception $e){
+        } catch (\Exception $e) {
             return response()->json(['message' => 'kurir tidak ditemukan'], 404);
         }
+    }
+
+    public function showLapak($id)
+    {
+        try {
+            $lapak = DB::table('alokasi')
+                ->join('lapak', 'alokasi.id_lapak', '=', 'lapak.id')
+                ->join('roti', 'alokasi.id_roti', '=', 'roti.id')
+                ->select('alokasi.id as id_alokasi', 'lapak.image', 'lapak.nama_lapak', 'lapak.alamat', 'alokasi.jumlah_roti_alokasi', 'roti.nama_roti')
+                ->where('lapak.id_kurir', $id)
+                ->get();
+
+
+            if (!$lapak) {
+                return response()->json(['message' => 'No lapak found.'], 404);
+            }
+
+            $lapak->transform(function ($lapaks) {
+                $lapaks->image_url = asset('storage/lapak_images/' . $lapaks->image);
+                return $lapaks;
+            });
+
+            return response()->json($lapak);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Error fetching data', 'error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function updateKeteranganLapak($idAlokasi)
+    {
+        $dataLapak = DB::table('alokasi')
+            ->join('lapak', 'alokasi.id_lapak', '=', 'lapak.id')
+            ->where('alokasi.id', $idAlokasi)
+            ->update(['keterangan' => 'Done']);
+
+        if (!$dataLapak) {
+            return response()->json(['message' => 'DataLapak not found'], 404);
+        }
+
+        return response()->json(['message' => 'Update successful']);
     }
 }
