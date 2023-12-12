@@ -8,6 +8,7 @@ use App\Http\Controllers\api\RoleController;
 use App\Http\Controllers\api\AlokasiController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\api\AuthController;
+use App\Http\Controllers\api\TransaksiController;
 
 
 /*
@@ -79,3 +80,4 @@ Route::put('/update-roti/{id}', 'App\Http\Controllers\Api\RotiController@updateR
 
 Route::get('/tampil-lapak/{id}', [KurirController::class, 'showLapak']);
 Route::put('/alokasi/{id}/update-keterangan', [KurirController::class, 'updateKeteranganLapak']);
+Route::post('/transaksi', [TransaksiController::class, 'store']);

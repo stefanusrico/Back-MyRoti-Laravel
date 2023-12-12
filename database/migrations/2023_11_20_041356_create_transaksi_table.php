@@ -19,7 +19,7 @@ return new class extends Migration {
             $table->integer('jumlah_roti_tidak_terjual');
             $table->double('pendapatan');
             $table->double('hutang');
-            $table->string('catatan');
+            $table->string('catatan')->nullable();
             $table->timestamps();
         });
     }
