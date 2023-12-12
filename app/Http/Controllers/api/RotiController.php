@@ -81,15 +81,15 @@ class RotiController extends Controller
                             ->whereColumn('roti.id', 'alokasi.id_roti')
                             ->where('alokasi.id_lapak', '=', $lapak_id);
                     })
-                        ->orWhere(function ($subquery) use ($lapak_id) {
-                            $subquery->whereExists(function ($innerSubquery) use ($lapak_id) {
-                                $innerSubquery->select(DB::raw(1))
-                                    ->from('alokasi')
-                                    ->whereColumn('roti.id', 'alokasi.id_roti')
-                                    ->where('alokasi.id_lapak', '=', $lapak_id)
-                                    ->where('alokasi.keterangan', '=', 'Done');
-                            });
+                    ->orWhere(function ($subquery) use ($lapak_id) {
+                        $subquery->whereExists(function ($innerSubquery) use ($lapak_id) {
+                            $innerSubquery->select(DB::raw(1))
+                                ->from('alokasi')
+                                ->whereColumn('roti.id', 'alokasi.id_roti')
+                                ->where('alokasi.id_lapak', '=', $lapak_id)
+                                ->where('alokasi.keterangan', '=', 'Done');
                         });
+                    });
                 })
                 ->whereNotExists(function ($outerSubquery) use ($lapak_id) {
                     $outerSubquery->select(DB::raw(1))

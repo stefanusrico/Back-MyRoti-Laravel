@@ -164,14 +164,14 @@ class LapakController extends Controller
         // Validasi hanya bidang-bidang tertentu yang diizinkan diubah
         $validator = Validator::make($request->all(), [
             
-            'kurir_id' => 'required',
+            'id_kurir' => 'required',
         ]);
 
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()], 400);
         }
 
-        $lapak->kurir_id = $request->input('kurir_id');
+        $lapak->id_kurir = $request->input('id_kurir');
         $lapak->save();
 
         return response()->json(['message' => 'Data lapak berhasil diperbarui'], 200);
