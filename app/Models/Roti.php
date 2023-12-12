@@ -11,7 +11,7 @@ class Roti extends Model
 
     protected $table = 'roti';
 
-    protected $fillable = ['nama_roti', 'jenis_roti', 'tanggal_produksi', 'tanggal_kadaluarasa'];
+    protected $fillable = ['nama_roti', 'jenis_roti', 'tanggal_produksi', 'tanggal_kadaluarsa'];
 
     public function alokasi()
     {

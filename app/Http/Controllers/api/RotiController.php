@@ -17,7 +17,7 @@ class RotiController extends Controller
             'nama_roti' => 'required',
             'jenis_roti' => 'required',
             'tanggal_produksi' => 'required',
-            'tanggal_kadaluarasa' => 'required',
+            'tanggal_kadaluarsa' => 'required',
         ]);
 
         // Jika validasi gagal
@@ -29,7 +29,7 @@ class RotiController extends Controller
             'nama_roti' => $request->input('nama_roti'),
             'jenis_roti' => $request->input('jenis_roti'),
             'tanggal_produksi' => $request->input('tanggal_produksi'),
-            'tanggal_kadaluarasa' => $request->input('tanggal_kadaluarasa'),
+            'tanggal_kadaluarsa' => $request->input('tanggal_kadaluarsa'),
         ]);
 
         
@@ -51,7 +51,7 @@ class RotiController extends Controller
                 'nama_roti' => $roti->nama_roti,
                 'jenis_roti' => $roti->jenis_roti,
                 'tanggal_produksi' => $roti->tanggal_produksi,
-                'tanggal_kadaluarasa' => $roti->tanggal_kadaluarasa,
+                'tanggal_kadaluarsa' => $roti->tanggal_kadaluarsa,
             ];
         });
 
@@ -133,7 +133,7 @@ class RotiController extends Controller
             'nama_roti' => 'required',
             'jenis_roti' => 'required',
             'tanggal_produksi' => 'required',
-            'tanggal_kadaluarasa' => 'required',
+            'tanggal_kadaluarsa' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -143,7 +143,8 @@ class RotiController extends Controller
         $roti->nama_roti = $request->input('nama_roti');
         $roti->jenis_roti = $request->input('jenis_roti');
         $roti->tanggal_produksi = $request->input('tanggal_produksi');
-        $roti->tanggal_kadaluarasa = $request->input('tanggal_kadaluarasa');
+        $roti->tanggal_kadaluarsa = $request->input('tanggal_kadaluarsa');
+        
         $roti->save();
 
         return response()->json(['message' => 'Data roti berhasil diperbarui'], 200);
