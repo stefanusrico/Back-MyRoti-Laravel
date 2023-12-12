@@ -81,7 +81,7 @@ class KurirController extends Controller
             $lapak = DB::table('alokasi')
                 ->join('lapak', 'alokasi.id_lapak', '=', 'lapak.id')
                 ->join('roti', 'alokasi.id_roti', '=', 'roti.id')
-                ->select('alokasi.id as id_alokasi', 'lapak.image', 'lapak.nama_lapak', 'lapak.alamat', 'alokasi.jumlah_roti_alokasi', 'roti.nama_roti')
+                ->select('alokasi.id as id_alokasi', 'alokasi.keterangan', 'lapak.image', 'lapak.nama_lapak', 'lapak.alamat', 'alokasi.jumlah_roti_alokasi', 'roti.nama_roti')
                 ->where('lapak.id_kurir', $id)
                 ->get();
 
@@ -114,4 +114,5 @@ class KurirController extends Controller
 
         return response()->json(['message' => 'Update successful']);
     }
+
 }

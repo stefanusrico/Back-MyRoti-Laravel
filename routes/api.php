@@ -74,11 +74,8 @@ Route::post('/roti', 'App\Http\Controllers\Api\RotiController@addRoti');
 Route::get('/roti', 'App\Http\Controllers\Api\RotiController@getRoti');
 Route::get('/roti-dd/{id}', 'App\Http\Controllers\Api\RotiController@rotiData');
 Route::get('/roti/{id}', 'App\Http\Controllers\Api\RotiController@showData');
-<<<<<<< Updated upstream
 Route::delete('/roti/{id}', 'App\Http\Controllers\Api\RotiController@deleteRoti');
 Route::put('/update-roti/{id}', 'App\Http\Controllers\Api\RotiController@updateRoti');
-=======
 
 Route::get('/tampil-lapak/{id}', [KurirController::class, 'showLapak']);
 Route::put('/alokasi/{id}/update-keterangan', [KurirController::class, 'updateKeteranganLapak']);
->>>>>>> Stashed changes

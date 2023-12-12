@@ -32,7 +32,7 @@ class RotiController extends Controller
             'tanggal_kadaluarsa' => $request->input('tanggal_kadaluarsa'),
         ]);
 
-        
+
 
         $roti->save();
 
@@ -60,11 +60,10 @@ class RotiController extends Controller
 
     public function showData($id)
     {
-        try{
+        try {
             $roti = Roti::findOrFail($id);
             return response()->json($roti);
-        }
-        catch(\Exception $e){
+        } catch (\Exception $e) {
             return response()->json(['message' => 'roti tidak ditemukan'], 404);
         }
     }
@@ -73,7 +72,7 @@ class RotiController extends Controller
     {
         try {
             $lapak_id = $idLapak; // Ganti dengan nilai lapak_id yang sesuai
-        
+
             $rotiNotInAlokasi = DB::table('roti')
                 ->where(function ($query) use ($lapak_id) {
                     $query->whereNotExists(function ($subquery) use ($lapak_id) {
@@ -82,24 +81,15 @@ class RotiController extends Controller
                             ->whereColumn('roti.id', 'alokasi.id_roti')
                             ->where('alokasi.id_lapak', '=', $lapak_id);
                     })
-                    ->orWhere(function ($subquery) use ($lapak_id) {
-                        $subquery->whereExists(function ($innerSubquery) use ($lapak_id) {
-                            $innerSubquery->select(DB::raw(1))
-                                ->from('alokasi')
-                                ->whereColumn('roti.id', 'alokasi.id_roti')
-                                ->where('alokasi.id_lapak', '=', $lapak_id)
-                                ->where('alokasi.keterangan', '=', 'Done!');
+                        ->orWhere(function ($subquery) use ($lapak_id) {
+                            $subquery->whereExists(function ($innerSubquery) use ($lapak_id) {
+                                $innerSubquery->select(DB::raw(1))
+                                    ->from('alokasi')
+                                    ->whereColumn('roti.id', 'alokasi.id_roti')
+                                    ->where('alokasi.id_lapak', '=', $lapak_id)
+                                    ->where('alokasi.keterangan', '=', 'Done');
+                            });
                         });
-                    })
-                    ->orWhere(function ($subquery) use ($lapak_id) {
-                        $subquery->whereExists(function ($innerSubquery) use ($lapak_id) {
-                            $innerSubquery->select(DB::raw(1))
-                                ->from('alokasi')
-                                ->whereColumn('roti.id', 'alokasi.id_roti')
-                                ->where('alokasi.id_lapak', '=', $lapak_id)
-                                ->where('alokasi.keterangan', '<>', 'Done');
-                        });
-                    });
                 })
                 ->whereNotExists(function ($outerSubquery) use ($lapak_id) {
                     $outerSubquery->select(DB::raw(1))
@@ -110,13 +100,13 @@ class RotiController extends Controller
                 })
                 ->select('roti.*')
                 ->get();
-        
+
             // Lanjutkan dengan pemrosesan hasil query atau pengembalian data
             return $rotiNotInAlokasi;
         } catch (\Exception $e) {
             return response()->json(['message' => 'Terjadi kesalahan dalam menjalankan query.'], 500);
         }
-         
+
     }
 
 
@@ -144,7 +134,7 @@ class RotiController extends Controller
         $roti->jenis_roti = $request->input('jenis_roti');
         $roti->tanggal_produksi = $request->input('tanggal_produksi');
         $roti->tanggal_kadaluarsa = $request->input('tanggal_kadaluarsa');
-        
+
         $roti->save();
 
         return response()->json(['message' => 'Data roti berhasil diperbarui'], 200);
