@@ -11,7 +11,7 @@ class Transaksi extends Model
 
     protected $table = 'transaksi';
 
-    protected $fillable = ['id_alokasi', 'lapak', 'jumlah_roti_terjual', 'jumlah_roti_tidak_terjual', 'pendapatan', 'hutang', 'catatan'];
+    protected $fillable = ['id_alokasi', 'lapak', 'jumlah_roti_terjual', 'jumlah_roti_tidak_terjual', 'pendapatan', 'hutang', 'tanggal_transaksi', 'catatan'];
 
     public function alokasi()
     {

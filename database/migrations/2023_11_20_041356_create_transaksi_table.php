@@ -20,6 +20,7 @@ return new class extends Migration {
             $table->double('pendapatan');
             $table->double('hutang');
             $table->string('catatan')->nullable();
+            $table->date('tanggal_transaksi');
             $table->timestamps();
         });
     }
