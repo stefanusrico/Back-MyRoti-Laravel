@@ -81,5 +81,11 @@ Route::put('/update-roti/{id}', 'App\Http\Controllers\Api\RotiController@updateR
 Route::get('/tampil-lapak/{id}', [KurirController::class, 'showLapak']);
 Route::put('/alokasi/{id}/update-keterangan', [KurirController::class, 'updateKeteranganLapak']);
 Route::post('/transaksi', [TransaksiController::class, 'store']);
-Route::get('/get-transaksi', [TransaksiController::class, 'getData']);
+Route::get('/get-transaksi-harian', [TransaksiController::class, 'getDataHarian']);
+Route::get('/get-transaksi-bulanan', [TransaksiController::class, 'getDataBulanan']);
 Route::delete('/delete-transaksi/{id}', [TransaksiController::class, 'destroy']);
+Route::put('/update-transaksi/{id}', [TransaksiController::class, 'update']);
+Route::get('/pendapatan-hari', [TransaksiController::class, 'getPendapatanHari']);
+Route::get('/pendapatan-minggu', [TransaksiController::class, 'getPendapatanMinggu']);
+Route::get('/pendapatan-bulan', [TransaksiController::class, 'getPendapatanBulan']);
+Route::get('/pendapatan-tahun', [TransaksiController::class, 'getPendapatanTahun']);
